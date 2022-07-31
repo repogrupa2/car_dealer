@@ -1,13 +1,15 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+# służy do internacjonalizacji I18N
 from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
 
 # Create your models here.
 
-class CustomUser(AbstractBaseUser,PermissionsMixin):
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(blank=True, max_length=30, verbose_name='first name')
     last_name = models.CharField(blank=True, max_length=30, verbose_name='last name')
@@ -16,7 +18,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
 
