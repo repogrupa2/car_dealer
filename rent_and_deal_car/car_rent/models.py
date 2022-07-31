@@ -49,7 +49,7 @@ class Vehicle(models.Model):
     photo = models.TextField(null=True)
     car_description = models.TextField(null=True)
 
-    def __str__(self) -> [tuple]:
+    def __str__(self):
         return f"Model: {self.model_id}", f"Body: {self.body_type_id}", f"Production_Year: {self.prod_year}", \
                         f"Color: {self.color}", f"Engine: {self.engine}", f"Type_of_Fuel: {self.type_of_fuel}", \
                f"Transmission_Id: {self.transmission}", f"Mileage: {self.mileage}", f"VIN: {self.vin}", \
@@ -57,6 +57,7 @@ class Vehicle(models.Model):
                
 
 class Branch(models.Model):
+    Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
     address = models.CharField(max_length=39)
     city = models.CharField(max_length=16)
     mobile = models.CharField(max_length=15)
