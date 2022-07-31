@@ -15,25 +15,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     def __str__(self):
         return self.email
-
-
-class RentalOffer(models.Model):
-    Vehicle_Id = models.ForeignKey(Vehicle)
-    Branch_Id_Availability = models.ForeignKey(Branch)
-    Availability = models.CharField(null=True, max_length=4)
-    Categories = models.CharField(max_length=16)
-    Description = models.TextField(null=True)
-    Deposit = models.DecimalField(2)
-    Price = models.DecimalField(2)
-
-    def __str__(self):
-        return f"Vehicle_Id: {self.Vehicle_Id}, {self.Branch_Id_Availability}, {self.Availability}, {self.Categories}, {self.Description}, {self.Deposit}, {self.Price}"
 
 
 class Brand(models.Model):
@@ -45,20 +32,20 @@ class BodyType(models.Model):
 
 
 class Model(models.Model):
-    brand_id = models.ForeignKey(Brand)
+    brand_id = models.ForeignKey(Brand, on_delete=models.PROTECT)
     name = models.CharField(max_length=16)
 
 
 class Vehicle(models.Model):
-    model_id = models.ForeignKey(Model)
-    body_type_id = models.ForeignKey(BodyType)
-    prod_year = models.SmallIntegerField(max_length=4)
+    model_id = models.ForeignKey(Model, on_delete=models.PROTECT)
+    body_type_id = models.ForeignKey(BodyType, on_delete=models.PROTECT)
+    prod_year = models.IntegerField(max_length=4)
     color = models.CharField(max_length=16)
     engine = models.DecimalField(decimal_places=1, max_digits=2)
     type_of_fuel = models.CharField(max_length=16)
     transmission = models.CharField(max_length=16)
     mileage = models.DecimalField(decimal_places=1, max_digits=7)
-    vin = models.SmallIntegerField(max_length=17)
+    vin = models.IntegerField(max_length=17)
     photo = models.TextField(null=True)
     car_description = models.TextField(null=True)
 
@@ -80,3 +67,17 @@ class Branch(models.Model):
     def __str__(self):
         return f"Address {self.address} in {self.city}, opening hours {self.opening_hours}, mobile {self.mobile}, " \
                f"mail {self.mail} "
+
+
+class RentalOffer(models.Model):
+    Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
+    Branch_Id_Availability = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    Availability = models.CharField(null=True, max_length=4)
+    Categories = models.CharField(max_length=16)
+    Description = models.TextField(null=True)
+    Deposit = models.DecimalField(decimal_places=2, max_digits=10)
+    Price = models.DecimalField(decimal_places=2, max_digits=10)
+
+    def __str__(self):
+        return f"Vehicle_Id: {self.Vehicle_Id}, {self.Branch_Id_Availability}, {self.Availability}," \
+               f" {self.Categories}, {self.Description}, {self.Deposit}, {self.Price}"
