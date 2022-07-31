@@ -67,3 +67,16 @@ class Vehicle(models.Model):
                         f"Color: {self.color}", f"Engine: {self.engine}", f"Type_of_Fuel: {self.type_of_fuel}", \
                f"Transmission_Id: {self.transmission}", f"Mileage: {self.mileage}", f"VIN: {self.vin}", \
                f"Photo: {self.photo}", f"Car_Description: {self.car_description}"
+               
+
+class Branch(models.Model):
+    address = models.CharField(max_length=39)
+    city = models.CharField(max_length=16)
+    mobile = models.CharField(max_length=15)
+    opening_hours = models.TextField()
+    mail = models.EmailField(max_length=39)
+    remarks = models.TextField(null=True)
+
+    def __str__(self):
+        return f"Address {self.address} in {self.city}, opening hours {self.opening_hours}, mobile {self.mobile}, " \
+               f"mail {self.mail} "
