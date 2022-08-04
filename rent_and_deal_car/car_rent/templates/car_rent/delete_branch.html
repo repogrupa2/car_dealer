@@ -1,0 +1,24 @@
+{% extends 'car_rent/list_of_branches.html' %}
+{% block content %}
+
+<br>
+<div class="row">
+	<div class="col-md-6">
+		<div class="card card-body">
+
+<p>Are You sure you want to delete branch : {{item}} ? </p>
+
+        <form action = "" method="POST">
+
+            {% csrf_token %}
+
+            <a href="{% url 'car_rent:list-of-branch' %}">Cancel</a>
+
+            <input type="submit" name="Confirm">
+
+
+        </form>
+		</div>
+	</div>
+</div>
+{% endblock %}
