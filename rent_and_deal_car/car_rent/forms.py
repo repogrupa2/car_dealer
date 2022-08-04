@@ -3,20 +3,22 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
 
+
 from .models import CustomUser, Vehicle
+from .models import CustomUser, Branch
+from django import forms
 
 
 class CustomUserCreationForm(UserCreationForm):
-
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name', )
+        fields = ('email', 'first_name', 'last_name',)
 
 
 class CustomUserChangeForm(UserChangeForm):
-
     class Meta:
         model = CustomUser
+
         fields = ('email', 'first_name', 'last_name', )
 
 
@@ -95,3 +97,13 @@ class VehicleDelete(View):
         ctx = {"is_deleted": True, "post": {"vehicle_model": vehicle_model, "vehicle_id": vehicle_id}}
 
         return render(request, "car_rent/vehicle_delete.html", context=ctx)
+
+        fields = ('email', 'first_name', 'last_name',)
+
+
+class BranchCreate(forms.ModelForm):
+
+    class Meta:
+        model = Branch
+        fields = ('address', 'city', 'opening_hours', 'mail','mobile', 'remarks')
+

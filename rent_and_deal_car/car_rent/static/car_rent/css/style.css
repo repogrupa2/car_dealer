@@ -1,0 +1,56 @@
+body {
+    height: 100vh;
+    width: 100vw;
+}
+.bg {
+    background: url(../images/car_login2.jpg);
+    background-repeat: no-repeat;
+
+    background-size: 100vw 100%;
+    height: 100vh;
+
+
+}
+
+.form-container {
+    border: 1px solid #fff;
+    background-color: rgba(94, 86, 148, 0.47);
+    padding: 50px 60px;
+    margin-top: 23vh;
+    -webkit-box-shadow: -1px 4px 39px 5px rgba(250,250,250,1);
+    -moz-box-shadow: -1px 4px 39px 5px rgba(250,250,250,1);
+    box-shadow: -1px 4px 39px 5px rgba(250,250,250,1);
+}
+
+.label_text {
+    margin-top: 2vh;
+    margin-bottom: 0.5vh;
+    font-size:3vh;
+    color: white;
+}
+
+.custom_button {
+    margin-top: 4vh;
+}
+
+.check {
+    margin-top: 2vh;
+    margin-left: 0.5vw;
+}
+
+.size_checkbox {
+    font-size: 20px;
+
+}
+
+.text_checkbox {
+    font-size: 20px;
+    color: white;
+}
+
+.user_circle {
+    font-size: 50px;
+    margin-right: 1vw;
+    border: 3px ;
+
+}

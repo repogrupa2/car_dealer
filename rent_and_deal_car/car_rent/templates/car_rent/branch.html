@@ -1,0 +1,30 @@
+{% extends 'car_rent/base.html' %}
+{% include 'car_rent/navbar.html' %}
+
+{% block content %}
+
+<br>
+<div class="container">
+	<div class="card text-white bg-secondary mb-3 border-primary mb-3" style="width: 30rem;">
+
+        <div class="card-header">
+        Branch Info </div>
+
+	    <div class="col-sm-12">
+		    <div class="card-body">
+			<h5>Branch Id: {{branch.id}}</h5>
+             <p>Address: {{ branch.address }}</p>
+        <p>City: {{branch.city}}</p>
+        <p>Mobile: +48 {{branch.mobile}}</p>
+        <p>Hours of open: {{ branch.opening_hours }}</p>
+        <p>Mail: {{ branch.mail }}</p>
+        <p>Remarks: {{ branch.remarks }}</p>
+
+            </div>
+        </div>
+    </div>
+ </div>
+
+</br>
+
+{% endblock content %}
