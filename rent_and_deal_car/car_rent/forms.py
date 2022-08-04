@@ -4,8 +4,7 @@ from django.shortcuts import render
 from django.views import View
 
 
-from .models import CustomUser, Vehicle
-from .models import CustomUser, Branch
+from .models import CustomUser, Vehicle, Branch
 from django import forms
 
 
