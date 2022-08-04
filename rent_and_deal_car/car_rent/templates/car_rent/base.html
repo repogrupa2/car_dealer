@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     {%block title %}
         <title>base</title>
     {%endblock title %}
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 <body>
+cos
     {% block content %}{% endblock content %}
+    <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
