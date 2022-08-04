@@ -52,3 +52,5 @@ def get_branch(request, branch_id):
 
     ctx = {'branch': branch}
     return render(request, "car_rent/branch.html", context=ctx)
+
+
