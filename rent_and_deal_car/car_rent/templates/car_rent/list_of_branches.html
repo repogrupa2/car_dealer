@@ -1,0 +1,33 @@
+{% extends 'car_rent/base.html' %}
+{% include 'car_rent/navbar.html' %}
+
+{% block content %}
+<div class="container">
+   {% for branch in list_of_branches %}
+<br>
+
+
+    <div class="row">
+        <div class="col-sm-6 ">
+            <div class="card card-body bg-light mb-3 border-primary mb-3">
+			<h5>Branch Id: {{branch.id}}</h5>
+             <p>Address: {{ branch.address }}</p>
+        <p>City: {{branch.city}}</p>
+        <p>Mobile:+48 {{branch.mobile}}</p>
+        <p>Hours of open: {{ branch.opening_hours }}</p>
+        <p>Mail: {{ branch.mail }}</p>
+        <p>Remarks: {{ branch.remarks }}</p>
+			<hr>
+            <a class="btn btn-outline-primary  btn-sm btn-block" href="{% url 'car_rent:branch' branch.id %}">View Branch</a>
+			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'car_rent:edit-branch' branch.id %}">Update Branch</a>
+			<a class="btn btn-outline-danger  btn-sm btn-block" href="{% url 'car_rent:delete-branch' branch.id %}">Delete Branch</a>
+
+        </div>
+             </div>
+                    </div>
+
+</br>
+   {% endfor %}
+
+</div>
+{% endblock content %}

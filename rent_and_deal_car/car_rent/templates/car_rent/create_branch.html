@@ -1,0 +1,23 @@
+{% extends 'car_rent/list_of_branches.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="card text-white bg-secondary mb-3 border-primary mb-3" style="width: 30rem;">
+
+        <div class="card-header">
+        Creating Branch </div>
+
+	    <div class="col-sm-5">
+		    <div class="card-body">
+
+                <form action = "" method="POST">
+                    {% csrf_token %}
+                    {{form}}
+
+                    <input type="submit" name="Submit">
+                </form>
+		    </div>
+	    </div>
+    </div>
+</div>
+{% endblock %}
