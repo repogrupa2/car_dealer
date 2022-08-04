@@ -1,8 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
-from .forms import BranchCreate
+from .models import RentalOffer
+from .models import CarAvailability
 from .models import Branch
+from .forms import RentalOfferCreate
+from .forms import CarAvailabilityCreate
+from .forms import BranchCreate
+
 
 
 def list_of_branch(request):
@@ -54,3 +58,39 @@ def get_branch(request, branch_id):
     return render(request, "car_rent/branch.html", context=ctx)
 
 
+def ListOfRentalOffer(request):
+    Offer = RentalOffer.objects.all()
+    return render(request, 'car_rent/list_of_offers.html', {'offer': Offer})
+
+def upload(request):
+    upload = RentalOfferCreate()
+    if request.method == 'POST':
+        upload = RentalOfferCreate(request.POST, request.FILES)
+        if upload.is_valid():
+            upload.save()
+            return redirect('ListOfRentalOffer')
+        else:
+            return HttpResponse()
+    else:
+        return render(request, 'RentalOffer/upload_form.html', {'upload_form':upload})
+
+def update_RentalOffer(request, RentalOffer_id):
+    RentalOffer_id = int(RentalOffer_id)
+    try:
+        RentalOffer_sel = RentalOffer.objects.get(id = RentalOffer_id)
+    except RentalOffer.DoesNotExist:
+        return redirect('ListOfRentalOffer')
+    RentalOffer_form = RentalOfferCreate(request.POST or None, instance = RentalOffer_sel)
+    if RentalOffer_form.is_valid():
+       RentalOffer_form.save()
+       return redirect('ListOfRentalOffer')
+    return render(request, 'RentalOffer/upload_form.html', {'upload_form':RentalOffer_form})
+
+def delete_RentalOffer(request, RentalOffer_id):
+    RentalOffer_id = int(RentalOffer_id)
+    try:
+        RentalOffer_sel = RentalOffer.objects.get(id = RentalOffer_id)
+    except RentalOffer.DoesNotExist:
+        return redirect('ListOfRentalOffer')
+    RentalOffer_sel.delete()
+    return redirect('ListOfRentalOffer')
