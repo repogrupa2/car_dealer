@@ -106,3 +106,16 @@ class BranchCreate(forms.ModelForm):
         model = Branch
         fields = ('address', 'city', 'opening_hours', 'mail','mobile', 'remarks')
 
+
+class RentalOfferCreate(forms.ModelForm):
+
+    class Meta:
+        model = RentalOffer
+        fields = '__all__'
+
+
+class CarAvailabilityCreate(forms.ModelForm):
+
+    class Meta:
+        model = CarAvailability
+        fields = '__all__'
