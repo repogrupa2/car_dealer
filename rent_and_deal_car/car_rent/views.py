@@ -58,32 +58,43 @@ def get_branch(request, branch_id):
     return render(request, "car_rent/branch.html", context=ctx)
 
 
-def ListOfRentalOffer(request):
+def list_of_rental_offers(request):
     Offer = RentalOffer.objects.all()
     return render(request, 'car_rent/list_of_offers.html', {'offer': Offer})
 
-def upload(request):
+
+def get_offer(request, RentalOffer_id):
+    try:
+        offer = RentalOffer.objects.get(id=RentalOffer_id)
+    except RentalOffer.DoesNotExist:
+        ctx = {'offer': offer}
+
+    ctx = {'offer': offer}
+    return render(request, "car_rent/offer.html", context=ctx)
+
+
+def upload_offer(request):
     upload = RentalOfferCreate()
     if request.method == 'POST':
-        upload = RentalOfferCreate(request.POST, request.FILES)
+        upload = RentalOfferCreate(request.POST)
         if upload.is_valid():
             upload.save()
-            return redirect('ListOfRentalOffer')
+            return redirect('list_of_offers')
         else:
             return HttpResponse()
     else:
-        return render(request, 'RentalOffer/upload_form.html', {'upload_form':upload})
+        return render(request, 'car_rent/create_offer.html',{'create_offer':upload})
 
 def update_RentalOffer(request, RentalOffer_id):
     RentalOffer_id = int(RentalOffer_id)
     try:
         RentalOffer_sel = RentalOffer.objects.get(id = RentalOffer_id)
     except RentalOffer.DoesNotExist:
-        return redirect('ListOfRentalOffer')
+        return redirect('list_of_offers')
     RentalOffer_form = RentalOfferCreate(request.POST or None, instance = RentalOffer_sel)
     if RentalOffer_form.is_valid():
        RentalOffer_form.save()
-       return redirect('ListOfRentalOffer')
+       return redirect('list_of_offers')
     return render(request, 'RentalOffer/upload_form.html', {'upload_form':RentalOffer_form})
 
 def delete_RentalOffer(request, RentalOffer_id):
@@ -91,6 +102,6 @@ def delete_RentalOffer(request, RentalOffer_id):
     try:
         RentalOffer_sel = RentalOffer.objects.get(id = RentalOffer_id)
     except RentalOffer.DoesNotExist:
-        return redirect('ListOfRentalOffer')
+        return redirect('list_of_offers')
     RentalOffer_sel.delete()
-    return redirect('ListOfRentalOffer')
+    return redirect('list_of_offers')
