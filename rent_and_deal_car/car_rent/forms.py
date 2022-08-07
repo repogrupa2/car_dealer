@@ -3,7 +3,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
 
-from .models import CustomUser, Vehicle, Branch
+from .models import CustomUser, Vehicle, Branch, Brand, Model
 from django import forms
 
 
@@ -31,3 +31,15 @@ class VehicleModelForm(forms.ModelForm):
         model = Vehicle
         fields = ('model_id', 'body_type_id', 'prod_year', 'color', 'engine', 'type_of_fuel',
                   'transmission', 'mileage', 'vin', 'photo', 'car_description')
+
+
+class BrandModelForm(forms.ModelForm):
+    class Meta:
+        model = Brand
+        fields = ('name',)
+
+
+class CarModelModelForm(forms.ModelForm):
+    class Meta:
+        model = Model
+        fields = ('brand_id', 'name',)

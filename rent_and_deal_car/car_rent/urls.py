@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import list_of_branch, get_branch, create_branch, edit_branch, delete_branch, VehicleList, AddVehicle, \
-     UpdateVehicle, VehicleDelete
+    UpdateVehicle, VehicleDelete, BrandList, CreateBrand, CreateModel, ModelList
 
 app_name = "car_rent"
 
@@ -15,4 +15,11 @@ urlpatterns = [
     path('addvehicle/', AddVehicle.as_view(), name="add-vehicle"),
     path('updatevehicle/<int:vehicle_id>', UpdateVehicle.as_view(), name="update-vehicle"),
     path('deletevehicle/<int:vehicle_id>', VehicleDelete.as_view(), name="delete-vehicle"),
+
+    path('listbrand/', BrandList.as_view(), name="list-brand"),
+    path('createbrand/', CreateBrand.as_view(), name="create-brand"),
+
+    path('listmodel/', ModelList.as_view(), name="list-model"),
+    path('createmodel/', CreateModel.as_view(), name="create-model"),
+
 ]
