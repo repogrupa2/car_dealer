@@ -1,0 +1,12 @@
+{% extends 'car_rent/base.html' %}
+
+{%block title %}
+    <title>UpdateVehicle</title>
+    {%endblock title %}
+{% block content %}
+    <form action="{% url 'car_rent:update-vehicle' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="OK">
+    </form>
+{% endblock content %}

@@ -1,3 +1,5 @@
+from random import choices
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
@@ -29,33 +31,40 @@ class Brand(models.Model):
     name = models.CharField(max_length=16)
 
 
-class BodyType(models.Model):
-    name = models.CharField(max_length=16)
+    def __str__(self):
+        return self.name
+
 
 
 class Model(models.Model):
     brand_id = models.ForeignKey(Brand, on_delete=models.PROTECT)
     name = models.CharField(max_length=16)
 
+    def __str__(self):
+        return f" {self.brand_id} {self.name}"
+
+gearbox = [('Automatic', 'Automatic'), ('Manual', 'Manual')]
+
+fuel = [('Diesel', 'Diesel'), ('Gasoline', 'Gasoline'), ('Electric', 'Electric'), ('Hybrid', 'Hybrid')]
+
+body = [('Sedan', 'Sedan'), ('Combi', 'Combi'), ('SUV', 'SUV'), ('Sport', 'Sport')]
+
 
 class Vehicle(models.Model):
     model_id = models.ForeignKey(Model, on_delete=models.PROTECT)
-    body_type_id = models.ForeignKey(BodyType, on_delete=models.PROTECT)
-    prod_year = models.IntegerField(max_length=4)
+    body_type = models.CharField(max_length=16, choices=body)
+    prod_year = models.CharField(max_length=4)
     color = models.CharField(max_length=16)
     engine = models.DecimalField(decimal_places=1, max_digits=2)
-    type_of_fuel = models.CharField(max_length=16)
-    transmission = models.CharField(max_length=16)
-    mileage = models.DecimalField(decimal_places=1, max_digits=7)
-    vin = models.IntegerField(max_length=17)
-    photo = models.TextField(null=True)
-    car_description = models.TextField(null=True)
+    type_of_fuel = models.CharField(max_length=16, choices=fuel)
+    transmission = models.CharField(max_length=16, choices=gearbox)
+    vin = models.CharField(max_length=17)
+    photo = models.ImageField()
 
     def __str__(self):
-        return f"Model: {self.model_id}", f"Body: {self.body_type_id}", f"Production_Year: {self.prod_year}", \
-               f"Color: {self.color}", f"Engine: {self.engine}", f"Type_of_Fuel: {self.type_of_fuel}", \
-               f"Transmission_Id: {self.transmission}", f"Mileage: {self.mileage}", f"VIN: {self.vin}", \
-               f"Photo: {self.photo}", f"Car_Description: {self.car_description}"
+        return f"Model: {self.model_id}, BodyType: {self.body_type}, Production_Year: {self.prod_year}", \
+               f"Color: {self.color}, Engine: {self.engine}, Type_of_Fuel: {self.type_of_fuel}", \
+               f"Transmission_Id: {self.transmission}, VIN: {self.vin}, Photo: {self.photo}"
 
 
 hours = [('00','00:00'),('01','01:00'),('02','02:00'),('03','03:00'),('04','04:00'),('05','05:00'),('06','06:00'),('07','07:00'),
@@ -88,13 +97,13 @@ class BranchCarAvailability(models.Model):
 
 class RentalOffer(models.Model):
     Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
-    BranchCarAvailabilityId = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
-    Availability = models.CharField(null=True, max_length=4)
+    BranchCarAvailability_Id = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
     Categories = models.CharField(max_length=16)
     Description = models.TextField(null=True)
     Deposit = models.DecimalField(decimal_places=2, max_digits=10)
-    Price = models.DecimalField(decimal_places=2, max_digits=10)
+    Price_per_day = models.DecimalField(decimal_places=2, max_digits=10)
 
     def __str__(self):
-        return f"Vehicle_Id: {self.Vehicle_Id}, {self.BranchCarAvailabilityId}, {self.Availability}," \
-               f" {self.Categories}, {self.Description}, {self.Deposit}, {self.Price}"
+        return f"Vehicle_Id: {self.Vehicle_Id}, BranchCarAvailability_Id: {self.BranchCarAvailability_Id}", \
+        f"Categories: {self.Categories}, Description: {self.Description}", \
+        f"Deposit: {self.Deposit}, Price_per_day: {self.Price_per_day}"

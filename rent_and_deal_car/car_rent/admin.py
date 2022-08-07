@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Branch, BranchCarAvailability
+from .models import CustomUser, Branch, Model, RentalOffer,BranchCarAvailability
 
 
 class CustomUserAdmin(UserAdmin):
@@ -28,3 +28,7 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Branch)
 admin.site.register(BranchCarAvailability)
+admin.site.register(RentalOffer)
+admin.site.register(Model)
+
+

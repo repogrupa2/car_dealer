@@ -1,0 +1,28 @@
+{% extends 'car_rent/base.html' %}
+
+{% block content %}
+
+<br>
+<div class="container">
+	<div class="card text-white bg-secondary mb-3 border-primary mb-3" style="width: 30rem;">
+
+        <div class="card-header">
+        Offer Info </div>
+
+	    <div class="col-sm-12">
+            <div class="card-body">
+			<h5>Vehicle Id: {{RentalOffer.Vehicle_id}}</h5>
+            <p>BranchCarAvailability Id: {{ RentalOffer.BranchCarAvailability_Id }}</p>
+            <p>Categories: {{RentalOffer.Categories}}</p>
+            <p>Description: {{ RentalOffer.Description }}</p>
+            <p>Deposit: {{ RentalOffer.Deposit }}</p>
+            <p>Price_per_day: {{ RentalOffer.Price_per_day }}</p>
+
+            </div>
+        </div>
+    </div>
+ </div>
+
+</br>
+
+{% endblock content %}
