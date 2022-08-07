@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Branch
+
+from .models import CustomUser, Branch, Model, RentalOffer
 from .models import RentalOffer
+
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
@@ -27,4 +29,7 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Branch)
+
 admin.site.register(RentalOffer)
+admin.site.register(Model)
+
