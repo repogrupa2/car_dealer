@@ -1,9 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
 
-from .forms import BranchCreate, VehicleModelForm
-from .models import Branch, Vehicle
+from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm
+from .models import Branch, Vehicle, Brand, Model
 
 
 def list_of_branch(request):
@@ -134,3 +135,48 @@ class VehicleDelete(View):
         ctx = {"is_deleted": True, "post": {"vehicle_model": vehicle_model, "vehicle_id": vehicle_id}}
 
         return render(request, "car_rent/vehicle_delete.html", context=ctx)
+
+
+class CreateBrand(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        form = BrandModelForm()
+        ctx = {'form': form}
+        return render(self.request, "car_rent/create_brand.html", context=ctx)
+
+    def post(self, request, *args, **kwargs):
+        form = BrandModelForm(data=request.POST)
+        if form.is_valid():
+            brand = form.save(commit=False)
+            brand.save()
+            ctx = {'brand': brand, 'form': form}
+            return render(self.request, "car_rent/create_brand.html", context=ctx)
+        return render(self.request, "car_rent/create_brand.html", {'form': form})
+
+class BrandList(View):
+    def get(self, request, *args, **kwargs):
+        brand = Brand.objects.all()
+        ctx = {'brand': brand}
+        return render(self.request, "car_rent/brand_list.html", context=ctx)
+
+
+class CreateModel(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        form = CarModelModelForm()
+        ctx = {'form': form}
+        return render(self.request, "car_rent/create_model.html", context=ctx)
+
+    def post(self, request, *args, **kwargs):
+        form = CarModelModelForm(data=request.POST)
+        if form.is_valid():
+            model = form.save(commit=False)
+            model.save()
+            ctx = {'model': model, 'form': form}
+            return render(self.request, "car_rent/create_model.html", context=ctx)
+        return render(self.request, "car_rent/create_model.html", {'form': form})
+
+
+class ModelList(View):
+    def get(self, request, *args, **kwargs):
+        model = Model.objects.all()
+        ctx = {'model': model}
+        return render(self.request, "car_rent/model_list.html", context=ctx)
