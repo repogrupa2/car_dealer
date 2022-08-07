@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 from .views import list_of_branch, get_branch, create_branch, edit_branch, delete_branch, VehicleList, AddVehicle, \
@@ -21,5 +22,4 @@ urlpatterns = [
 
     path('listmodel/', ModelList.as_view(), name="list-model"),
     path('createmodel/', CreateModel.as_view(), name="create-model"),
-
-]
+    ]
