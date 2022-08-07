@@ -26,19 +26,20 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Brand(models.Model):
     name = models.CharField(max_length=16)
 
-
-class BodyType(models.Model):
-    name = models.CharField(max_length=16)
+    def __str__(self):
+        return self.name
 
 
 class Model(models.Model):
     brand_id = models.ForeignKey(Brand, on_delete=models.PROTECT)
     name = models.CharField(max_length=16)
 
+    def __str__(self):
+        return f" {self.brand_id} {self.name}"
 
 class Vehicle(models.Model):
     model_id = models.ForeignKey(Model, on_delete=models.PROTECT)
-    body_type_id = models.ForeignKey(BodyType, on_delete=models.PROTECT)
+    body_type_id = models.CharField(max_length=16)
     prod_year = models.IntegerField(max_length=4)
     color = models.CharField(max_length=16)
     engine = models.DecimalField(decimal_places=1, max_digits=2)
