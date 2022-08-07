@@ -88,13 +88,13 @@ class BranchCarAvailability(models.Model):
 
 class RentalOffer(models.Model):
     Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
-    BranchCarAvailabilityId = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
-    Availability = models.CharField(null=True, max_length=4)
+    BranchCarAvailability_Id = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
     Categories = models.CharField(max_length=16)
     Description = models.TextField(null=True)
     Deposit = models.DecimalField(decimal_places=2, max_digits=10)
-    Price = models.DecimalField(decimal_places=2, max_digits=10)
+    Price_per_day = models.DecimalField(decimal_places=2, max_digits=10)
 
     def __str__(self):
-        return f"Vehicle_Id: {self.Vehicle_Id}, {self.BranchCarAvailabilityId}, {self.Availability}," \
-               f" {self.Categories}, {self.Description}, {self.Deposit}, {self.Price}"
+        return f"Vehicle_Id: {self.Vehicle_Id}, BranchCarAvailability_Id: {self.BranchCarAvailability_Id}", \
+        f"Categories: {self.Categories}, Description: {self.Description}", \
+        f"Deposit: {self.Deposit}, Price_per_day: {self.Price_per_day}"

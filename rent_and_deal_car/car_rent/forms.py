@@ -3,7 +3,8 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
 
-from .models import CustomUser, Vehicle, Branch, Brand, Model
+
+from .models import CustomUser, Vehicle, Branch, Brand, Model, RentalOffer
 from django import forms
 
 
@@ -45,4 +46,13 @@ class CarModelModelForm(forms.ModelForm):
         model = Model
 
         fields = ('brand_id', 'name',)
+
+
+class RentalOfferCreate(forms.ModelForm):
+
+    class Meta:
+        model = RentalOffer
+        fields = ('Vehicle_Id', 'BranchCarAvailability_Id', 'Categories', 'Description',
+                  'Deposit', 'Price_per_day')
+
 

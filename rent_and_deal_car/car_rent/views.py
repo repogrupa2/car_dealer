@@ -1,10 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
-from django.views import View
 
-from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm
-from .models import Branch, Vehicle, Brand, Model
+from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate
+from .models import Branch, Vehicle, Brand, Model, RentalOffer
 
 
 def list_of_branch(request):
@@ -55,6 +54,57 @@ def get_branch(request, branch_id):
 
     ctx = {'branch': branch}
     return render(request, "car_rent/branch.html", context=ctx)
+
+
+def list_of_rental_offers(request):
+    Offer = RentalOffer.objects.all()
+    return render(request, 'car_rent/list_of_offers.html', {'offer': Offer})
+
+
+def get_offer(request, RentalOffer_id):
+    try:
+        offer = RentalOffer.objects.get(id=RentalOffer_id)
+    except RentalOffer.DoesNotExist:
+        ctx = {'offer': offer}
+
+    ctx = {'offer': offer}
+    return render(request, "car_rent/offer.html", context=ctx)
+
+
+def upload_offer(request):
+    upload = RentalOfferCreate()
+    if request.method == 'POST':
+        upload = RentalOfferCreate(request.POST)
+        if upload.is_valid():
+            upload.save()
+            return redirect('list_of_offers')
+        else:
+            return HttpResponse()
+    else:
+        return render(request, 'car_rent/create_offer.html',{'create_offer':upload})
+
+
+def update_RentalOffer(request, RentalOffer_id):
+    RentalOffer_id = int(RentalOffer_id)
+    try:
+        RentalOffer_sel = RentalOffer.objects.get(id = RentalOffer_id)
+    except RentalOffer.DoesNotExist:
+        return redirect('list_of_offers')
+    RentalOffer_form = RentalOfferCreate(request.POST or None, instance=RentalOffer_sel)
+    if RentalOffer_form.is_valid():
+       RentalOffer_form.save()
+       return redirect('list_of_offers')
+    return render(request, 'RentalOffer/upload_form.html', {'upload_form': RentalOffer_form})
+
+
+def delete_RentalOffer(request, RentalOffer_id):
+    RentalOffer_id = int(RentalOffer_id)
+    try:
+        RentalOffer_sel = RentalOffer.objects.get(id=RentalOffer_id)
+    except RentalOffer.DoesNotExist:
+        return redirect('list_of_offers')
+    RentalOffer_sel.delete()
+    return redirect('list_of_offers')
 
 
 class VehicleList(View):
