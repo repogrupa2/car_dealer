@@ -144,18 +144,20 @@ class CreateBrand(LoginRequiredMixin, View):
         return render(self.request, "car_rent/create_brand.html", context=ctx)
 
     def post(self, request, *args, **kwargs):
+        brands = Brand.objects.all()
         form = BrandModelForm(data=request.POST)
         if form.is_valid():
+            print("cos")
             brand = form.save(commit=False)
             brand.save()
-            ctx = {'brand': brand, 'form': form}
+            ctx = {'brand': brand, 'form': form, 'brands': brands}
             return render(self.request, "car_rent/create_brand.html", context=ctx)
         return render(self.request, "car_rent/create_brand.html", {'form': form})
 
 class BrandList(View):
     def get(self, request, *args, **kwargs):
-        brand = Brand.objects.all()
-        ctx = {'brand': brand}
+        brands = Brand.objects.all()
+        ctx = {'brands': brands}
         return render(self.request, "car_rent/brand_list.html", context=ctx)
 
 
