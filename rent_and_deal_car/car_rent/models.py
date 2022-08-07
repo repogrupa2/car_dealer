@@ -1,3 +1,5 @@
+from random import choices
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -27,33 +29,35 @@ class Brand(models.Model):
     name = models.CharField(max_length=16)
 
 
-class BodyType(models.Model):
-    name = models.CharField(max_length=16)
-
-
 class Model(models.Model):
     brand_id = models.ForeignKey(Brand, on_delete=models.PROTECT)
     name = models.CharField(max_length=16)
 
 
+gearbox = [('Automatic', 'Automatic'), ('Manual', 'Manual')]
+
+fuel = [('Diesel', 'Diesel'), ('Gasoline', 'Gasoline'), ('Electric', 'Electric'), ('Hybrid', 'Hybrid')]
+
+body = [('Sedan', 'Sedan'), ('Combi', 'Combi'), ('SUV', 'SUV'), ('Sport', 'Sport')]
+
+
 class Vehicle(models.Model):
     model_id = models.ForeignKey(Model, on_delete=models.PROTECT)
-    body_type_id = models.ForeignKey(BodyType, on_delete=models.PROTECT)
-    prod_year = models.IntegerField(max_length=4)
+    body_type = models.CharField(max_length=16, choices=body)
+    prod_year = models.CharField(max_length=4)
     color = models.CharField(max_length=16)
     engine = models.DecimalField(decimal_places=1, max_digits=2)
-    type_of_fuel = models.CharField(max_length=16)
-    transmission = models.CharField(max_length=16)
+    type_of_fuel = models.CharField(max_length=16, choices=fuel)
+    transmission = models.CharField(max_length=16, choices=gearbox)
     mileage = models.DecimalField(decimal_places=1, max_digits=7)
-    vin = models.IntegerField(max_length=17)
-    photo = models.TextField(null=True)
-    car_description = models.TextField(null=True)
+    vin = models.CharField(max_length=17)
+    photo = models.ImageField()
 
     def __str__(self):
-        return f"Model: {self.model_id}", f"Body: {self.body_type_id}", f"Production_Year: {self.prod_year}", \
+        return f"Model: {self.model_id}", f"BodyType: {self.body_type}", f"Production_Year: {self.prod_year}", \
                f"Color: {self.color}", f"Engine: {self.engine}", f"Type_of_Fuel: {self.type_of_fuel}", \
                f"Transmission_Id: {self.transmission}", f"Mileage: {self.mileage}", f"VIN: {self.vin}", \
-               f"Photo: {self.photo}", f"Car_Description: {self.car_description}"
+               f"Photo: {self.photo}"
 
 
 class Branch(models.Model):
