@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import RegexValidator
 from django.db import models
+from django.forms import forms
 from django.utils import timezone
 # służy do internacjonalizacji I18N
 from django.utils.translation import gettext_lazy as _
@@ -56,25 +58,32 @@ class Vehicle(models.Model):
                f"Photo: {self.photo}", f"Car_Description: {self.car_description}"
 
 
+hours = [('00','00:00'),('01','01:00'),('02','02:00'),('03','03:00'),('04','04:00'),('05','05:00'),('06','06:00'),('07','07:00'),
+         ('08','08:00'),('09','09:00'),('10','10:00'),('11','11:00'),('12','12:00'),('13','13:00'),('14','14:00'),('15','15:00'),
+         ('16','16:00'),('17','17:00'),('18','18:00'),('19','19:00'),('20','20:00'),('21','21:00'),('22','22:00'),('23','23:00')]
+
 class Branch(models.Model):
     address = models.CharField(max_length=39)
     city = models.CharField(max_length=16)
-    mobile = models.CharField(max_length=15)
-    opening_hours = models.CharField(max_length=39)
+    phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)', message="Phone number must be entered in the format: '+00 000 000 000'. Up to 11 digits allowed.")
+    mobile = models.CharField(validators=[phone_regex], max_length=17)
+    open_from = models.CharField(max_length=6, choices=hours)
+    open_till = models.CharField(max_length=6, choices=hours)
     mail = models.EmailField(max_length=39)
     remarks = models.TextField(null=True)
 
     def __str__(self):
-        return f"Address: {self.address} in {self.city}, opening hours: {self.opening_hours}, mobile: {self.mobile}, " \
+        return f"Address: {self.address} in {self.city}, open from: {self.open_from}, open till: {self.open_till} ,mobile: {self.mobile}, " \
                f"mail {self.mail}"
 
 
 class BranchCarAvailability(models.Model):
-    Branch_Id = models.ForeignKey(Branch, on_delete=models.PROTECT)
-    Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
+    branch_id = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    vehicle_id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
+    availability = models.BooleanField()
 
     def __str__(self):
-        return f"Branch: {self.Branch_Id} , Car: {self.Vehicle_Id}"
+        return f"Branch: {self.branch_id} , Car: {self.vehicle_id}, Availability: {self.availability}"
 
 
 class RentalOffer(models.Model):
