@@ -2,8 +2,8 @@
 from django.urls import path
 
 from .views import ListOfBranches, ViewBranch, CreateBranch, EditBranch, BranchDelete, VehicleList, AddVehicle, \
-    upload_offer, get_offer, update_RentalOffer, delete_RentalOffer, UpdateVehicle, VehicleDelete, BrandList, CreateBrand, CreateModel, ModelList
-
+    upload_offer, get_offer, update_RentalOffer, delete_RentalOffer, UpdateVehicle, VehicleDelete, BrandList, \
+    CreateBrand, CreateModel, ModelList, list_of_rental_offers
 
 app_name = "car_rent"
 
