@@ -29,10 +29,17 @@ class Brand(models.Model):
     name = models.CharField(max_length=16)
 
 
+    def __str__(self):
+        return self.name
+
+
+
 class Model(models.Model):
     brand_id = models.ForeignKey(Brand, on_delete=models.PROTECT)
     name = models.CharField(max_length=16)
 
+    def __str__(self):
+        return f" {self.brand_id} {self.name}"
 
 gearbox = [('Automatic', 'Automatic'), ('Manual', 'Manual')]
 
@@ -49,15 +56,13 @@ class Vehicle(models.Model):
     engine = models.DecimalField(decimal_places=1, max_digits=2)
     type_of_fuel = models.CharField(max_length=16, choices=fuel)
     transmission = models.CharField(max_length=16, choices=gearbox)
-    mileage = models.DecimalField(decimal_places=1, max_digits=7)
     vin = models.CharField(max_length=17)
     photo = models.ImageField()
 
     def __str__(self):
-        return f"Model: {self.model_id}", f"BodyType: {self.body_type}", f"Production_Year: {self.prod_year}", \
-               f"Color: {self.color}", f"Engine: {self.engine}", f"Type_of_Fuel: {self.type_of_fuel}", \
-               f"Transmission_Id: {self.transmission}", f"Mileage: {self.mileage}", f"VIN: {self.vin}", \
-               f"Photo: {self.photo}"
+        return f"Model: {self.model_id}, BodyType: {self.body_type}, Production_Year: {self.prod_year}", \
+               f"Color: {self.color}, Engine: {self.engine}, Type_of_Fuel: {self.type_of_fuel}", \
+               f"Transmission_Id: {self.transmission}, VIN: {self.vin}, Photo: {self.photo}"
 
 
 class Branch(models.Model):

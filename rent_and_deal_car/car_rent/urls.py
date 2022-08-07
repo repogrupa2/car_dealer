@@ -22,5 +22,4 @@ urlpatterns = [
 
     path('listmodel/', ModelList.as_view(), name="list-model"),
     path('createmodel/', CreateModel.as_view(), name="create-model"),
-
-]
+    ]

@@ -106,13 +106,12 @@ class UpdateVehicle(View):
             vehicle.engine = form.cleaned_data["Engine"]
             vehicle.type_of_fuel = form.cleaned_data["TypeOfFuel"]
             vehicle.transmission = form.cleaned_data["Transmission"]
-            vehicle.mileage = form.cleaned_data["Mileage"]
             vehicle.vin = form.cleaned_data["VIN"]
             vehicle.photo = form.cleaned_data["Photo"]
-            vehicle.car_description = form.cleaned_data["CarDescription"]
             vehicle.save(update_fields=('Model_id', 'BodyType', 'ProductionYear', 'Color', 'Engine', 'TypeOfFuel'
                                                                                                      'Transmission',
-                                        'Mileage', 'VIN', 'Photo'))
+                                         'VIN', 'Photo'))
+
 
             ctx = {'form': form, 'vehicle': vehicle}
             return render(self.request, "car_rent/updatevehicle.html", context=ctx)
@@ -149,13 +148,16 @@ class CreateBrand(LoginRequiredMixin, View):
             brand = form.save(commit=False)
             brand.save()
             ctx = {'brand': brand, 'form': form}
+
             return render(self.request, "car_rent/create_brand.html", context=ctx)
+            
         return render(self.request, "car_rent/create_brand.html", {'form': form})
 
 class BrandList(View):
     def get(self, request, *args, **kwargs):
         brand = Brand.objects.all()
         ctx = {'brand': brand}
+        
         return render(self.request, "car_rent/brand_list.html", context=ctx)
 
 
@@ -163,6 +165,7 @@ class CreateModel(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = CarModelModelForm()
         ctx = {'form': form}
+        
         return render(self.request, "car_rent/create_model.html", context=ctx)
 
     def post(self, request, *args, **kwargs):
@@ -172,6 +175,7 @@ class CreateModel(LoginRequiredMixin, View):
             model.save()
             ctx = {'model': model, 'form': form}
             return render(self.request, "car_rent/create_model.html", context=ctx)
+            
         return render(self.request, "car_rent/create_model.html", {'form': form})
 
 
@@ -179,4 +183,5 @@ class ModelList(View):
     def get(self, request, *args, **kwargs):
         model = Model.objects.all()
         ctx = {'model': model}
+        
         return render(self.request, "car_rent/model_list.html", context=ctx)

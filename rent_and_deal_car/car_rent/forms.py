@@ -29,8 +29,9 @@ class BranchCreate(forms.ModelForm):
 class VehicleModelForm(forms.ModelForm):
     class Meta:
         model = Vehicle
+
         fields = ('model_id', 'body_type', 'prod_year', 'color', 'engine', 'type_of_fuel',
-                  'transmission', 'mileage', 'vin', 'photo')
+                  'transmission', 'vin', 'photo')
 
 
 class BrandModelForm(forms.ModelForm):
@@ -42,4 +43,6 @@ class BrandModelForm(forms.ModelForm):
 class CarModelModelForm(forms.ModelForm):
     class Meta:
         model = Model
+
         fields = ('brand_id', 'name',)
+
