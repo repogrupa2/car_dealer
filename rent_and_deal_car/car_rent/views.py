@@ -1,59 +1,89 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
+from django.views import View
 
 from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate
 from .models import Branch, Vehicle, Brand, Model, RentalOffer
 
 
-def list_of_branch(request):
-    list_of_branches = Branch.objects.all()
-    return render(request, 'car_rent/list_of_branches.html', {'list_of_branches': list_of_branches})
+class ListOfBranches(View):
+    def get(self, request, *args, **kwargs):
+        list_of_branches = Branch.objects.all()
+        ctx = {'list_of_branches': list_of_branches}
+        return render(self.request, 'car_rent/list_of_branches.html', context=ctx)
 
 
-def create_branch(request):
-    form = BranchCreate()
-    if request.method == 'POST':
-        form = BranchCreate(request.POST)
+class CreateBranch(View):
+    def get(self, request, *args, **kwargs):
+        form = BranchCreate()
+        ctx = {'form': form}
+        return render(self.request, "car_rent/create_branch.html", context=ctx)
+
+    def post(self, request, *args, **kwargs):
+        form = BranchCreate(data=request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('car_rent:list-of-branch')
+            branch = form.save(commit=False)
+            branch.save()
+            ctx = {'branch': branch, 'form': form}
+            return render(self.request, "car_rent/create_branch.html", context=ctx)
+        return render(self.request, "car_rent/list_of_branches.html", {'form': form})
 
-    ctx = {'form': form}
-    return render(request, 'car_rent/create_branch.html', ctx)
 
+class EditBranch(View):
+    def get(self, request, branch_id, *args, **kwargs):
+        try:
+            branch = Branch.objects.get(id=branch_id)
+        except Branch.DoesNotExist:
+            ctx = {'branch_Id': id, 'errors': True}
+            return render(self.request, "car_rent/create_branch.html", context=ctx)
 
-def edit_branch(request, branch_id):
-    branch = Branch.objects.get(id=branch_id)
-    form = BranchCreate(instance=branch)
-    if request.method == 'POST':
-        form = BranchCreate(request.POST, instance=branch)
+        form = BranchCreate(instance=branch)
+        ctx = {'branch': branch, 'form': form}
+        return render(self.request, "car_rent/create_branch.html", context=ctx)
+
+    def post(self, request, branch_id, *args, **kwargs):
+        try:
+            branch = Branch.objects.get(id=branch_id)
+        except Branch.DoesNotExist:
+            return HttpResponseBadRequest()
+        form = BranchCreate(data=request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('car_rent:list-of-branch')
+            branch.address = form.cleaned_data["address"]
+            branch.city = form.cleaned_data["city"]
+            branch.mobile = form.cleaned_data["mobile"]
+            branch.open_from = form.cleaned_data["open_from"]
+            branch.open_till = form.cleaned_data["open_till"]
+            branch.mail = form.cleaned_data["mail"]
+            branch.remarks = form.cleaned_data["remarks"]
+            branch.save(update_fields=("address", "city", "mobile", "open_from", "open_till", "mail", "remarks"))
 
-    ctx = {'form': form}
-    return render(request, 'car_rent/create_branch.html', ctx)
+            ctx = {'form': form, 'branch': branch}
+            return render(self.request, "car_rent/create_branch.html", context=ctx)
+
+        ctx = {'errors': form.errors}
+        return render(self.request, "car_rent/create_branch.html", context=ctx)
 
 
-def delete_branch(request, branch_id):
-    branch = Branch.objects.get(id=branch_id)
-    if request.method == 'POST':
+class BranchDelete(View):
+    def get(self, request, branch_id, *args, **kwargs):
+        try:
+            branch = Branch.objects.get(id=branch_id)
+        except Branch.DoesNotExist:
+            ctx = {'branch_id': id, 'errors': True}
+            return render(request, "car_rent/delete_branch.html", context=ctx)
+        branch_id = branch.id
         branch.delete()
-        return redirect('car_rent:list-of-branch')
-
-    ctx = {'item': branch}
-    return render(request, 'car_rent/delete_branch.html', ctx)
 
 
-def get_branch(request, branch_id):
-    try:
-        branch = Branch.objects.get(id=branch_id)
-    except Branch.DoesNotExist:
-        ctx = {'branch': branch}
-
-    ctx = {'branch': branch}
-    return render(request, "car_rent/branch.html", context=ctx)
+class ViewBranch(View):
+    def get(self, request, branch_id, *args, **kwargs):
+        try:
+            branch = Branch.objects.get(id=branch_id)
+            ctx = {"branch": branch}
+        except Branch.DoesNotExist:
+            ctx = {'branch_id': id}
+        return render(request, "car_rent/branch.html", context=ctx)
 
 
 def list_of_rental_offers(request):
@@ -203,6 +233,7 @@ class CreateBrand(LoginRequiredMixin, View):
             
         return render(self.request, "car_rent/create_brand.html", {'form': form})
 
+
 class BrandList(View):
     def get(self, request, *args, **kwargs):
         brand = Brand.objects.all()
@@ -235,3 +266,4 @@ class ModelList(View):
         ctx = {'model': model}
         
         return render(self.request, "car_rent/model_list.html", context=ctx)
+

@@ -2,22 +2,20 @@
 {% block content %}
 
 <br>
-<div class="row">
-	<div class="col-md-6">
-		<div class="card card-body">
-
-<p>Are You sure you want to delete branch : {{item}} ? </p>
+<div class="container">
+	<div class="col-sm-7">
+		<div class="card card-body text-white bg-info mb-3 border-primary mb-4">
+        <p>Are You sure you want to delete branch : {{item}} ? </p>
 
         <form action = "" method="POST">
 
             {% csrf_token %}
-
-            <a href="{% url 'car_rent:list-of-branch' %}">Cancel</a>
-
-            <input type="submit" name="Confirm">
+            <a href="{% url 'car_rent:list-of-branch' %}" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">Cancel</a>
+            <input class="btn btn-danger" type="submit" value="Delete">
 
 
         </form>
+
 		</div>
 	</div>
 </div>
