@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views import View
 
 
-from .models import CustomUser, Vehicle, Branch, RentalOffer, CarAvailability
+from .models import CustomUser, Vehicle, Branch, RentalOffer
 from django import forms
 
 
@@ -111,15 +111,7 @@ class RentalOfferCreate(forms.ModelForm):
 
     class Meta:
         model = RentalOffer
-        fields = ('Vehicle_Id', 'BranchCarAvailability_Id', 'CarAvailability_Id', 'Categories', 'Description',
-                  'Deposit', 'Price')
-
-
-class CarAvailabilityCreate(forms.ModelForm):
-
-    class Meta:
-        model = CarAvailability
-        fields = ('Vehicle_Id', 'Availability')
-
+        fields = ('Vehicle_Id', 'BranchCarAvailability_Id', 'Categories', 'Description',
+                  'Deposit', 'Price_per_day')
 
 
