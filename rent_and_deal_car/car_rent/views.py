@@ -1,10 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
-
-from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate, CustomerCreate
-from .models import Branch, Vehicle, Brand, Model, RentalOffer, Customer
+from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate, CustomerCreate 
+from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability, Customer
+import datetime
 
 
 class ListOfBranches(View):
@@ -93,7 +94,7 @@ class ListOfRentalOffers(View):
         return render(self.request, 'car_rent/list_of_offers.html', context=ctx)
 
 
-class RentalOfferCreate(View):
+class CreateOffer(View):
     def get(self, request, *args, **kwargs):
         form = RentalOfferCreate()
         ctx = {'form': form}
@@ -102,11 +103,11 @@ class RentalOfferCreate(View):
     def post(self, request, *args, **kwargs):
         form = RentalOfferCreate(data=request.POST)
         if form.is_valid():
-            rental_offer = form.save(commit=False)
-            rental_offer.save()
-            ctx = {'rental_offer': rental_offer, 'form': form}
+            offer = form.save(commit=False)
+            offer.save()
+            ctx = {'offer': offer, 'form': form}
             return render(self.request, "car_rent/create_offer.html", context=ctx)
-        return render(self.request, "car_rent/create_offer.html", {'form': form})
+        return render(self.request, "car_rent/list_of_offers.html", {'form': form})
 
 
 class RentalOfferEdit(View):
@@ -116,7 +117,7 @@ class RentalOfferEdit(View):
         except RentalOffer.DoesNotExist:
             ctx = {'rental_offer_id': id, 'errors': True}
             return render(self.request, "car_rent/create_offer.html", context=ctx)
-
+            
         form = RentalOfferCreate(instance=rental_offer)
         ctx = {'rental_offer': rental_offer, 'form': form}
         return render(self.request, "car_rent/create_offer.html", context=ctx)
@@ -170,7 +171,6 @@ class VehicleList(View):
         vehicles = Vehicle.objects.all()
         ctx = {'vehicles': vehicles}
         return render(self.request, "car_rent/vehiclelist.html", context=ctx)
-
 
 class AddVehicle(View):
     def get(self, request, *args, **kwargs):
@@ -294,6 +294,25 @@ class ModelList(View):
         
         return render(self.request, "car_rent/model_list.html", context=ctx)
 
+
+def home(request):
+    return render(request, "car_rent/home.html")
+
+def aboutus(request):
+    return render(request, "car_rent/about_us.html")
+
+
+class CarRental(View):
+    def get(self, request, id, *args, **kwargs):
+        try:
+            rental = CarRental.objects.get(id=id)
+            ctx = {"rental": rental}
+        except:
+            ctx = {'id': id}
+
+        return render(request, "car_rent/car_rental.html", context=ctx)
+
+
 class ListOfCustomers(View):
   def get(self, request, *args, **kwargs):
         list_of_customers = Customer.objects.all()
@@ -373,3 +392,4 @@ class CustomerView(View):
         except Customer.DoesNotExist:
             ctx = {'customer_id': id}
         return render(request, "car_rent/customer.html", context=ctx)
+

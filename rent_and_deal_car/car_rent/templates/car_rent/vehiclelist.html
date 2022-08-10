@@ -3,10 +3,13 @@
 {%block title %}
     <title>VehicleList</title>
     {%endblock title %}
+
 {% block content %}
+
 <form action="{% url 'car_rent:vehicle-list' %}" method="post">
 
         {% for vehicle in vehicles %}
+        
         <h5>Vehicle Id: {{vehicle.id}}</h5>
         <h5>Model: {{vehicle.model_id}}</h5>
         <h5>Body: {{vehicle.body_type}}</h5>
@@ -25,3 +28,4 @@
          {% endfor %}
     </form>
 {%endblock content %}
+

@@ -1,0 +1,20 @@
+{% extends 'car_rent/base.html' %}
+
+{% block content %}
+
+<div class="p-4 mb-2 bg-success text-dark">
+<p class="text-center">.</p>
+  </div>
+     <form action = "" method="GET">
+	    <div class="col-sm-12">
+		    <div class="card-body">
+<!--                <h5> Id: {{rental.id}}</h5>-->
+        <p>Name: {{rental.customer_id}}</p>
+        <p>Offer: {{rental.rental_offer_id}}</p>
+        <p> Date of Rent: {{ rental.date_of_rent }}</p>
+        <p>Total price: {{ rental.total_price }}</p>
+                 {% csrf_token %}
+                    {{form}}
+                    <input type="submit" name="Submit">
+</div>
+{% endblock content %}
