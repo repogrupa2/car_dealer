@@ -3,7 +3,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
 
-from .models import CustomUser, Vehicle, Branch, Brand, Model, RentalOffer, BranchCarAvailability
+from .models import CustomUser, Vehicle, Branch, Brand, Model, RentalOffer, BranchCarAvailability, Customer
 from django import forms
 
 
@@ -57,4 +57,9 @@ class RentalOfferCreate(forms.ModelForm):
                   'Deposit', 'Price_per_day')
 
 
+class CustomerCreate(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ('name', 'surname', 'address', 'company', 'credit_card_nr', 'tax_id',
+                  'mobile', 'email')
 
