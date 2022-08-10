@@ -105,6 +105,21 @@ class RentalOffer(models.Model):
 
     def __str__(self):
         return f"Vehicle_Id: {self.Vehicle_Id}, BranchCarAvailability_Id: {self.BranchCarAvailability_Id}", \
-               f"Categories: {self.Categories}," \
-               f" Description: {self.Description}", \
-               f"Deposit: {self.Deposit} ", f"Price_per_day: {self.Price_per_day}"
+        f"Categories: {self.Categories}, Description: {self.Description}", \
+        f"Deposit: {self.Deposit}, Price_per_day: {self.Price_per_day}"
+
+
+class Customer(models.Model):
+    name = models.CharField(max_length=30, verbose_name='name')
+    surname = models.CharField(max_length=30, verbose_name='surname')
+    address = models.CharField(max_length=39)
+    company = models.CharField(max_length=50, null=True)
+    credit_card_nr = models.IntegerField(max_length=24)
+    tax_id = models.CharField(max_length=10, null=True)
+    phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)', message="Phone nr must be entered in the format: "
+                                                                          "+00 000 000 000'. Up to 11 digits allowed.")
+    mobile = models.CharField(validators=[phone_regex], max_length=17)
+    email = models.EmailField(max_length=39)
+
+    def __str__(self):
+        return f"name: {self.name}, surname: {self.surname}, address: {self.address}, company: {self.company}", \
