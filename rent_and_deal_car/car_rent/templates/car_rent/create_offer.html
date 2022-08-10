@@ -1,22 +1,21 @@
 {% extends 'car_rent/base.html' %}
 {% block content %}
 
-<div class="container">
+<div class="">
     <div class="card text-white bg-secondary mb-3 border-primary mb-3" style="width: 30rem;">
 
         <div class="card-header">
         Creating offer </div>
 
-	    <div class="col-sm-5">
-		    <div class="card-body">
-
+	    <div class="col-md-5">
+            <div class="card-body">
+        <form action = "" method="POST">
                     {% csrf_token %}
-                    {% for field in create_offer %}
-                        <th>{{field.label}}</th>
-                        <td>{{ field }}</td>
-                    {% endfor %}
+                    {{form}}
 
                     <input type="submit" name="Submit">
+                </form>
+
                 </form>
 		    </div>
 	    </div>

@@ -1,9 +1,31 @@
 {% extends 'car_rent/base.html' %}
 
 {% block content %}
-<div class="container">
+
+
+
+<form action="{% url 'car_rent:list-of-rental-offers' %}" method="post">
+
    {% for offer in list_of_offers %}
 <br>
+
+     <div class="">
+        <div class="col-md-10 ">
+            <div class="card card-body bg-light mb-3 border-primary mb-3">
+
+    <h5>Model:{{offer.Vehicle_Id.model_id}}</h5>
+<!--    <p>BranchCarAvailability: {{ offer.BranchCarAvailability_Id.availability }}</p>-->
+    <p>Categories: {{offer.Categories}}</p>
+    <p>Description:{{offer.Description}}</p>
+    <p>Deposit: {{ offer.Deposit }}</p>
+    <p>Price_per_day: {{ offer.Price_per_day }}</p>
+    {% csrf_token %}
+    {{ form }}
+                <a class="btn btn-outline-primary  btn-sm btn-block" href="{% url 'car_rent:car_rental' offer.id %}">Rent</a>
+    <hr>
+       </div>
+
+       </div>
 
        </div>
 
@@ -11,7 +33,7 @@
 </br>
    {% endfor %}
 
-</div>
+</form>
 {% endblock content %}
 
 

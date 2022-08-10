@@ -2,8 +2,8 @@
 from django.urls import path
 
 from .views import ListOfBranches, ViewBranch, CreateBranch, EditBranch, BranchDelete, VehicleList, AddVehicle, \
-    upload_offer, get_offer, update_RentalOffer, delete_RentalOffer, UpdateVehicle, VehicleDelete, BrandList, \
-    CreateBrand, CreateModel, ModelList, list_of_rental_offers
+    CreateOffer, get_offer, update_RentalOffer, delete_RentalOffer, UpdateVehicle, VehicleDelete, BrandList, \
+    CreateBrand, CreateModel, ModelList, ListOfRentalOffers, home, aboutus, CarRental
 
 app_name = "car_rent"
 
@@ -26,11 +26,16 @@ urlpatterns = [
     path('listmodel/', ModelList.as_view(), name="list-model"),
     path('createmodel/', CreateModel.as_view(), name="create-model"),
     
-    path('list_of_offers/', list_of_rental_offers, name = "list-of-rental-offers"),
+    path('list_of_offers/', ListOfRentalOffers.as_view(), name = "list-of-rental-offers"),
     path('offer/<int:RentalOffer_id>', get_offer, name="rental-offer"),
-    path('create_offer/', upload_offer, name = "upload-offer"),
+    path('create_offer/', CreateOffer.as_view(), name = "upload-offer"),
     path('edit/<int:RentalOffer_id>', update_RentalOffer,name = "edit-offer"),
     path('delete/<int:RentalOffer_id>', delete_RentalOffer,name = "delete-offer"),
+
+    path('car_rental/<int:id>',CarRental.as_view(), name="car_rental"),
+
+    path('home/',home, name="home"),
+    path('aboutus/',aboutus, name="aboutus"),
     ]
 
 

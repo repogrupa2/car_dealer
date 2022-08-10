@@ -1,11 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
 
 from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate
-from .models import Branch, Vehicle, Brand, Model, RentalOffer
-
+from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability
+import datetime
 
 class ListOfBranches(View):
     def get(self, request, *args, **kwargs):
@@ -86,9 +87,11 @@ class ViewBranch(View):
         return render(request, "car_rent/branch.html", context=ctx)
 
 
-def list_of_rental_offers(request):
-    Offer = RentalOffer.objects.all()
-    return render(request, 'car_rent/list_of_offers.html', {'offer': Offer})
+class ListOfRentalOffers(View):
+    def get(self, request, *args, **kwargs):
+        list_of_offers = RentalOffer.objects.all()
+        ctx = {'list_of_offers': list_of_offers}
+        return render(self.request, 'car_rent/list_of_offers.html', context=ctx)
 
 
 def get_offer(request, RentalOffer_id):
@@ -100,18 +103,20 @@ def get_offer(request, RentalOffer_id):
     ctx = {'offer': offer}
     return render(request, "car_rent/offer.html", context=ctx)
 
+class CreateOffer(View):
+    def get(self, request, *args, **kwargs):
+        form = RentalOfferCreate()
+        ctx = {'form': form}
+        return render(self.request, "car_rent/create_offer.html", context=ctx)
 
-def upload_offer(request):
-    upload = RentalOfferCreate()
-    if request.method == 'POST':
-        upload = RentalOfferCreate(request.POST)
-        if upload.is_valid():
-            upload.save()
-            return redirect('list_of_offers')
-        else:
-            return HttpResponse()
-    else:
-        return render(request, 'car_rent/create_offer.html',{'create_offer':upload})
+    def post(self, request, *args, **kwargs):
+        form = RentalOfferCreate(data=request.POST)
+        if form.is_valid():
+            offer = form.save(commit=False)
+            offer.save()
+            ctx = {'offer': offer, 'form': form}
+            return render(self.request, "car_rent/create_offer.html", context=ctx)
+        return render(self.request, "car_rent/list_of_offers.html", {'form': form})
 
 
 def update_RentalOffer(request, RentalOffer_id):
@@ -142,7 +147,6 @@ class VehicleList(View):
         vehicles = Vehicle.objects.all()
         ctx = {'vehicles': vehicles}
         return render(self.request, "car_rent/vehiclelist.html", context=ctx)
-
 
 class AddVehicle(View):
     def get(self, request, *args, **kwargs):
@@ -266,4 +270,22 @@ class ModelList(View):
         ctx = {'model': model}
         
         return render(self.request, "car_rent/model_list.html", context=ctx)
+
+def home(request):
+    return render(request, "car_rent/home.html")
+
+def aboutus(request):
+    return render(request, "car_rent/about_us.html")
+
+
+class CarRental(View):
+    def get(self, request, id, *args, **kwargs):
+        try:
+            rental = CarRental.objects.get(id=id)
+            ctx = {"rental": rental}
+        except:
+            ctx = {'id': id}
+
+        return render(request, "car_rent/car_rental.html", context=ctx)
+
 

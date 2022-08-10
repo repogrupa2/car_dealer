@@ -16,6 +16,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(blank=True, max_length=30, verbose_name='last name')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_renting = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
@@ -62,9 +63,8 @@ class Vehicle(models.Model):
     photo = models.ImageField()
 
     def __str__(self):
-        return f"Model: {self.model_id}, BodyType: {self.body_type}, Production_Year: {self.prod_year}", \
-               f"Color: {self.color}, Engine: {self.engine}, Type_of_Fuel: {self.type_of_fuel}", \
-               f"Transmission_Id: {self.transmission}, VIN: {self.vin}, Photo: {self.photo}"
+        return f"Model: {self.model_id}, BodyType: {self.body_type}, Production_Year: {self.prod_year}"
+
 
 
 hours = [('00','00:00'),('01','01:00'),('02','02:00'),('03','03:00'),('04','04:00'),('05','05:00'),('06','06:00'),('07','07:00'),
@@ -89,21 +89,37 @@ class Branch(models.Model):
 class BranchCarAvailability(models.Model):
     branch_id = models.ForeignKey(Branch, on_delete=models.PROTECT)
     vehicle_id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
-    availability = models.BooleanField()
+    availability = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Branch: {self.branch_id} , Car: {self.vehicle_id}, Availability: {self.availability}"
 
 
+categories = [('Economy','Economy'),('Intermediate ','Intermediate '),('Premium','Premium'),('Luxury','Luxury')]
+
 class RentalOffer(models.Model):
     Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
     BranchCarAvailability_Id = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
-    Categories = models.CharField(max_length=16)
+    Categories = models.CharField(max_length=13,choices=categories)
     Description = models.TextField(null=True)
     Deposit = models.DecimalField(decimal_places=2, max_digits=10)
     Price_per_day = models.DecimalField(decimal_places=2, max_digits=10)
 
     def __str__(self):
-        return f"Vehicle_Id: {self.Vehicle_Id}, BranchCarAvailability_Id: {self.BranchCarAvailability_Id}", \
-        f"Categories: {self.Categories}, Description: {self.Description}", \
-        f"Deposit: {self.Deposit}, Price_per_day: {self.Price_per_day}"
+        return f"Vehicle_Id: {self.Vehicle_Id}"
+
+class Customer(models.Model):
+    name = models.CharField(max_length=39)
+    surname = models.CharField(max_length=16)
+
+    def __str__(self):
+        return f"Customer name: {self.name}, Surname: {self.surname}"
+
+class CarRental(models.Model):
+    customer_id = models.ForeignKey(Customer,on_delete=models.PROTECT)
+    rental_offer_id = models.ForeignKey(RentalOffer,on_delete=models.PROTECT)
+    total_price = models.DecimalField(decimal_places=2, max_digits=10,null=True)
+    date_of_rent = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Customer ID: {self.customer_id}, and rental offer {self.rental_offer_id}"
