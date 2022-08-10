@@ -4,9 +4,24 @@
     <title>VehicleList</title>
     {%endblock title %}
 {% block content %}
-    <form action="{% url 'car_rent:vehicle-list' %}" method="post">
+<form action="{% url 'car_rent:vehicle-list' %}" method="post">
+
+        {% for vehicle in vehicles %}
+        <h5>Vehicle Id: {{vehicle.id}}</h5>
+        <h5>Model: {{vehicle.model_id}}</h5>
+        <h5>Body: {{vehicle.body_type}}</h5>
+        <h5>Prod: {{vehicle.prod_year}}</h5>
+        <h5>Color: {{vehicle.color}}</h5>
+        <h5>Engine: {{vehicle.engine}}</h5>
+        <h5>Fuel: {{vehicle.type_of_fuel}}</h5>
+        <h5>Transmission: {{vehicle.transmission}}</h5>
+        <h5>Vin: {{vehicle.vin}}</h5>
+        <h5>Photo: {% if vehicle.photo != None %}
+            <img style='max-width: 10%' src="{{ vehicle.photo.url }}">
+                    {% endif %}</h5>
     {% csrf_token %}
     {{ form }}
-    <input type="submit" value="OK">
+
+         {% endfor %}
     </form>
-{% endblock content %}
+{%endblock content %}

@@ -1,9 +1,6 @@
-from random import choices
-
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
-from django.forms import forms
 from django.utils import timezone
 # służy do internacjonalizacji I18N
 from django.utils.translation import gettext_lazy as _
@@ -30,10 +27,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Brand(models.Model):
     name = models.CharField(max_length=16)
 
-
     def __str__(self):
         return self.name
-
 
 
 class Model(models.Model):
@@ -42,6 +37,7 @@ class Model(models.Model):
 
     def __str__(self):
         return f" {self.brand_id} {self.name}"
+
 
 gearbox = [('Automatic', 'Automatic'), ('Manual', 'Manual')]
 
@@ -59,22 +55,26 @@ class Vehicle(models.Model):
     type_of_fuel = models.CharField(max_length=16, choices=fuel)
     transmission = models.CharField(max_length=16, choices=gearbox)
     vin = models.CharField(max_length=17)
-    photo = models.ImageField()
+    photo = models.ImageField(blank=True, null=True)
 
     def __str__(self):
-        return f"Model: {self.model_id}, BodyType: {self.body_type}, Production_Year: {self.prod_year}", \
-               f"Color: {self.color}, Engine: {self.engine}, Type_of_Fuel: {self.type_of_fuel}", \
-               f"Transmission_Id: {self.transmission}, VIN: {self.vin}, Photo: {self.photo}"
+        return f"Model: {self.model_id}"
 
 
-hours = [('00','00:00'),('01','01:00'),('02','02:00'),('03','03:00'),('04','04:00'),('05','05:00'),('06','06:00'),('07','07:00'),
-         ('08','08:00'),('09','09:00'),('10','10:00'),('11','11:00'),('12','12:00'),('13','13:00'),('14','14:00'),('15','15:00'),
-         ('16','16:00'),('17','17:00'),('18','18:00'),('19','19:00'),('20','20:00'),('21','21:00'),('22','22:00'),('23','23:00')]
+hours = [('00', '00:00'), ('01', '01:00'), ('02', '02:00'), ('03', '03:00'), ('04', '04:00'), ('05', '05:00'),
+         ('06', '06:00'), ('07', '07:00'),
+         ('08', '08:00'), ('09', '09:00'), ('10', '10:00'), ('11', '11:00'), ('12', '12:00'), ('13', '13:00'),
+         ('14', '14:00'), ('15', '15:00'),
+         ('16', '16:00'), ('17', '17:00'), ('18', '18:00'), ('19', '19:00'), ('20', '20:00'), ('21', '21:00'),
+         ('22', '22:00'), ('23', '23:00')]
+
 
 class Branch(models.Model):
     address = models.CharField(max_length=39)
     city = models.CharField(max_length=16)
-    phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)', message="Phone number must be entered in the format: '+00 000 000 000'. Up to 11 digits allowed.")
+    phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)',
+                                 message="Phone number must be entered in the format: '+00 000 000 000'. Up to 11 "
+                                         "digits allowed.")
     mobile = models.CharField(validators=[phone_regex], max_length=17)
     open_from = models.CharField(max_length=6, choices=hours)
     open_till = models.CharField(max_length=6, choices=hours)
@@ -123,5 +123,3 @@ class Customer(models.Model):
 
     def __str__(self):
         return f"name: {self.name}, surname: {self.surname}, address: {self.address}, company: {self.company}", \
-
-

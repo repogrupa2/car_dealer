@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
+from .apps import CarRentConfig
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Branch, Model, RentalOffer, BranchCarAvailability, Customer
+
+from .models import CustomUser, Branch, Model, RentalOffer, BranchCarAvailability, Brand, Vehicle, Customer
+
 
 
 class CustomUserAdmin(UserAdmin):
@@ -31,4 +34,6 @@ admin.site.register(BranchCarAvailability)
 admin.site.register(RentalOffer)
 admin.site.register(Model)
 admin.site.register(Customer)
+admin.site.register(Brand)
+admin.site.register(Vehicle)
 
