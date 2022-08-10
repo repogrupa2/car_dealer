@@ -1,9 +1,11 @@
-
+from django.conf.urls.static import static
 from django.urls import path
 
+from rent_and_deal_car import settings
 from .views import ListOfBranches, ViewBranch, CreateBranch, EditBranch, BranchDelete, VehicleList, AddVehicle, \
     CreateOffer, get_offer, update_RentalOffer, delete_RentalOffer, UpdateVehicle, VehicleDelete, BrandList, \
     CreateBrand, CreateModel, ModelList, ListOfRentalOffers, home, aboutus, CarRental
+
 
 app_name = "car_rent"
 
@@ -36,6 +38,9 @@ urlpatterns = [
 
     path('home/',home, name="home"),
     path('aboutus/',aboutus, name="aboutus"),
-    ]
+  
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
 
 
