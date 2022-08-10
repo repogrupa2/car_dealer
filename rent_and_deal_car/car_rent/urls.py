@@ -1,6 +1,7 @@
-
+from django.conf.urls.static import static
 from django.urls import path
 
+from rent_and_deal_car import settings
 from .views import ListOfBranches, ViewBranch, CreateBranch, EditBranch, BranchDelete, VehicleList, AddVehicle, \
     upload_offer, get_offer, update_RentalOffer, delete_RentalOffer, UpdateVehicle, VehicleDelete, BrandList, \
     CreateBrand, CreateModel, ModelList, list_of_rental_offers
@@ -31,6 +32,6 @@ urlpatterns = [
     path('create_offer/', upload_offer, name = "upload-offer"),
     path('edit/<int:RentalOffer_id>', update_RentalOffer,name = "edit-offer"),
     path('delete/<int:RentalOffer_id>', delete_RentalOffer,name = "delete-offer"),
-    ]
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
