@@ -8,13 +8,12 @@
      <form action = "" method="GET">
 	    <div class="col-sm-12">
 		    <div class="card-body">
-<!--                <h5> Id: {{rental.id}}</h5>-->
-        <p>Name: {{rental.customer_id}}</p>
-        <p>Offer: {{rental.rental_offer_id}}</p>
-        <p> Date of Rent: {{ rental.date_of_rent }}</p>
-        <p>Total price: {{ rental.total_price }}</p>
+        <h5>Client name: {{request.user.name}}</h5>
+        <p>Offer: {{form.rental_offer_id}}</p>
+        <p> Date of Rent: {{ form.date_of_rent }}</p>
+        <p>Total price: {{ form.total_price }}</p>
                  {% csrf_token %}
-                    {{form}}
+<!--                    {{form}}-->
                     <input type="submit" name="Submit">
 </div>
 {% endblock content %}

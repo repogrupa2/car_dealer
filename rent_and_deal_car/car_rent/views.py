@@ -1,12 +1,15 @@
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate, CustomerCreate 
+from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate, CustomerCreate, \
+    CarRentalForm
 from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability, Customer
 import datetime
 
+User = get_user_model()
 
 class ListOfBranches(View):
     def get(self, request, *args, **kwargs):
@@ -301,16 +304,15 @@ def home(request):
 def aboutus(request):
     return render(request, "car_rent/about_us.html")
 
+def account_details(request):
+    return render(request, "car_rent/account_details.html")
 
-class CarRental(View):
-    def get(self, request, id, *args, **kwargs):
-        try:
-            rental = CarRental.objects.get(id=id)
-            ctx = {"rental": rental}
-        except:
-            ctx = {'id': id}
 
-        return render(request, "car_rent/car_rental.html", context=ctx)
+class CarRentalDetails(View):                                                   # Tu wyświetlanie Car Rental
+    def get(self, request,id,*args, **kwargs):
+            form = RentalOffer.objects.get(id=id)
+            ctx = {"form": form}
+            return render(request, "car_rent/car_rental.html", context=ctx)
 
 
 class ListOfCustomers(View):
@@ -320,7 +322,7 @@ class ListOfCustomers(View):
         return render(self.request, 'car_rent/list_of_customers.html', context=ctx)
 
 
-class CustomerCreate(View):
+class CustomerAdd(View):
     def get(self, request, *args, **kwargs):
         form = CustomerCreate()
         ctx = {'form': form}
@@ -391,5 +393,5 @@ class CustomerView(View):
             ctx = {"customer": customer}
         except Customer.DoesNotExist:
             ctx = {'customer_id': id}
-        return render(request, "car_rent/customer.html", context=ctx)
+        return render(request, "car_rent/customer_create.html", context=ctx)
 
