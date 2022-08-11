@@ -124,7 +124,7 @@ class Customer(models.Model):
     email = models.EmailField(max_length=39)
 
     def __str__(self):
-        return f"name: {self.name}, surname: {self.surname}, address: {self.address}, company: {self.company}", \
+        return f"name: {self.name}, surname: {self.surname}"
         
         
 class CarRental(models.Model):
@@ -135,8 +135,3 @@ class CarRental(models.Model):
 
     def __str__(self):
         return f"Customer ID: {self.customer_id}, and rental offer {self.rental_offer_id}"
-
-    
-
-
-

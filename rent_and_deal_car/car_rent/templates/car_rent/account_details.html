@@ -1,0 +1,34 @@
+{% extends 'car_rent/base.html' %}
+
+{% block content %}
+<br>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<h5>Customer: {{user.name}}</h5>
+			<hr>
+			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'car_rent:customer-add'%}">Confirm Details</a>
+
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<div class="card card-body">
+			<h5>User Details</h5>
+			<hr>
+             <p>Name:  {{request.user.first_name}}</p>
+			<p>Surname:  {{request.user.last_name}}</p>
+			<p>Email:  {{request.user}}</p>
+
+
+		</div>
+	</div>
+
+</div>
+
+
+
+
+
+{% endblock content %}
