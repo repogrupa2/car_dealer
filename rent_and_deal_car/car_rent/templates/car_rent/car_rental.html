@@ -2,18 +2,28 @@
 
 {% block content %}
 
-<div class="p-4 mb-2 bg-success text-dark">
-<p class="text-center">.</p>
-  </div>
-     <form action = "" method="GET">
-	    <div class="col-sm-12">
-		    <div class="card-body">
-        <h5>Client name: {{request.user.name}}</h5>
-        <p>Offer: {{form.rental_offer_id}}</p>
-        <p> Date of Rent: {{ form.date_of_rent }}</p>
-        <p>Total price: {{ form.total_price }}</p>
-                 {% csrf_token %}
-<!--                    {{form}}-->
-                    <input type="submit" name="Submit">
-</div>
+
+
+     <form action = "{% url 'car_rent:car_rental' offer.id %}" method="POST">
+<div class="">
+        <div class="container col-md-5 ">
+            <div class="card card-body bg-info mb-3 border-primary mb-3">
+
+                {% if user %}
+                    <h5>Client name: {{user}}</h5>
+                {% else  %}
+                    <h5>Client mail: {{user.email}}</h5>
+                {% endif %}
+                <p>Offer: {{offer.Vehicle_Id.model_id}}</p>
+                <p> Date of Rent: {{date }} </p>
+                <p>Price per day: {{ offer.Price_per_day }} GR </p>
+                <p>Total price: {{ price }} You will see after car return</p>
+                         {% csrf_token %}
+
+                <input type="submit" value="Confirm" class="btn btn-success">
+                <input type="submit" value="Cancel" class="btn btn-danger">
+    </form>
+           </div>
+        </div>
+ </div>
 {% endblock content %}

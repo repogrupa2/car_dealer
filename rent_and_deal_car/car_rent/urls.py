@@ -5,7 +5,7 @@ from rent_and_deal_car import settings
 from .views import ListOfBranches, ViewBranch, CreateBranch, EditBranch, BranchDelete, VehicleList, AddVehicle, \
     CreateOffer, UpdateVehicle, VehicleDelete, BrandList, \
     CreateBrand, CreateModel, ModelList, ListOfRentalOffers, home, aboutus, CarRental, RentalOfferView, RentalOfferEdit, \
-    RentalOfferDelete, CarRentalDetails, account_details, CustomerCreate, CustomerAdd
+    RentalOfferDelete, CarRentalDetails, account_details
 
 app_name = "car_rent"
 
@@ -35,12 +35,13 @@ urlpatterns = [
     path('delete/<int:RentalOffer_id>', RentalOfferDelete.as_view,name = "delete-offer"),
 
     path('car_rental/<int:id>',CarRentalDetails.as_view(), name="car_rental"),
+    path('car_rental_succesfull/',CarRentalDetails.as_view(), name="car_rental_succesfull"),
 
     path('home/',home, name="home"),
     path('aboutus/',aboutus, name="aboutus"),
     path('account_details/',account_details, name="account-details"),
 
-    path('customer/',CustomerAdd.as_view(), name="customer-add"),
+    # path('customer/',CustomerAdd.as_view(), name="customer-add"),
   
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

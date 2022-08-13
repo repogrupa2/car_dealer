@@ -4,12 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate, CustomerCreate, \
-    CarRentalForm
-from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability, Customer
+from .forms import BranchCreate, VehicleModelForm, BrandModelForm, CarModelModelForm, RentalOfferCreate,CarRentalForm
+from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability, CustomUser
 import datetime
 
 User = get_user_model()
+
 
 class ListOfBranches(View):
     def get(self, request, *args, **kwargs):
@@ -120,7 +120,7 @@ class RentalOfferEdit(View):
         except RentalOffer.DoesNotExist:
             ctx = {'rental_offer_id': id, 'errors': True}
             return render(self.request, "car_rent/create_offer.html", context=ctx)
-            
+
         form = RentalOfferCreate(instance=rental_offer)
         ctx = {'rental_offer': rental_offer, 'form': form}
         return render(self.request, "car_rent/create_offer.html", context=ctx)
@@ -139,7 +139,7 @@ class RentalOfferEdit(View):
             rental_offer.deposit = form.cleaned_data["deposit"]
             rental_offer.price_per_day = form.cleaned_data["price_per_day"]
             rental_offer.save(update_fields=("vehicle_Id", "branchCarAvailability_Id", "categories", "description",
-            "deposit", "price_per_day"))
+                                             "deposit", "price_per_day"))
 
             ctx = {'form': form, 'rental_offer': rental_offer}
             return render(self.request, "car_rent/create_offer.html", context=ctx)
@@ -174,6 +174,7 @@ class VehicleList(View):
         vehicles = Vehicle.objects.all()
         ctx = {'vehicles': vehicles}
         return render(self.request, "car_rent/vehiclelist.html", context=ctx)
+
 
 class AddVehicle(View):
     def get(self, request, *args, **kwargs):
@@ -294,104 +295,128 @@ class ModelList(View):
     def get(self, request, *args, **kwargs):
         model = Model.objects.all()
         ctx = {'model': model}
-        
+
         return render(self.request, "car_rent/model_list.html", context=ctx)
 
 
 def home(request):
     return render(request, "car_rent/home.html")
 
+
 def aboutus(request):
     return render(request, "car_rent/about_us.html")
+
 
 def account_details(request):
     return render(request, "car_rent/account_details.html")
 
 
-class CarRentalDetails(View):                                                   # Tu wyświetlanie Car Rental
-    def get(self, request,id,*args, **kwargs):
-            form = RentalOffer.objects.get(id=id)
-            ctx = {"form": form}
-            return render(request, "car_rent/car_rental.html", context=ctx)
-
-
-class ListOfCustomers(View):
-  def get(self, request, *args, **kwargs):
-        list_of_customers = Customer.objects.all()
-        ctx = {'list_of_customers': list_of_customers}
-        return render(self.request, 'car_rent/list_of_customers.html', context=ctx)
-
-
-class CustomerAdd(View):
-    def get(self, request, *args, **kwargs):
-        form = CustomerCreate()
-        ctx = {'form': form}
-        return render(self.request, "car_rent/customer_create.html", context=ctx)
-
-    def post(self, request, *args, **kwargs):
-        form = CustomerCreate(data=request.POST)
-        if form.is_valid():
-            customer = form.save(commit=False)
-            customer.save()
-            ctx = {'customer': customer, 'form': form}
-            return render(self.request, "car_rent/customer_create.html", context=ctx)
-        return render(self.request, "car_rent/customer_create.html", {'form': form})
-
-
-class CustomerEdit(View):
-    def get(self, request, customer_id, *args, **kwargs):
+class CarRentalDetails(View):  # Tu wyświetlanie Car Rental
+    def get(self, request, id, *args, **kwargs):
         try:
-            customer = Customer.objects.get(id=customer_id)
-        except Customer.DoesNotExist:
-            ctx = {'customer_id': id, 'errors': True}
-            return render(self.request, "car_rent/customer_create.html", context=ctx)
+            offer = RentalOffer.objects.get(id=id)
+        except RentalOffer.DoesNotExist:
+            return HttpResponse()
+            # user = request.user.first_name, request.user.last_name
+        date = datetime.date.today()
 
-        form = CustomerCreate(instance=customer)
-        ctx = {'customer': customer, 'form': form}
-        return render(self.request, "car_rent/customer_create.html", context=ctx)
 
-    def post(self, request, customer_id, *args, **kwargs):
+        ctx = {"offer": offer, "date": date}
+        return render(request, "car_rent/car_rental.html", context=ctx)
+
+    def post(self, request, id, *args, **kwargs):
         try:
-            customer = Customer.objects.get(id=customer_id)
-        except Customer.DoesNotExist:
-            return HttpResponseBadRequest()
-        form = CustomerCreate(data=request.POST)
-        if form.is_valid():
-            customer.name = form.cleaned_data["name"]
-            customer.surname = form.cleaned_data["surname"]
-            customer.address = form.cleaned_data["address"]
-            customer.company = form.cleaned_data["company"]
-            customer.credit_card_nr = form.cleaned_data["credit_card_nr"]
-            customer.tax_id = form.cleaned_data["tax_id"]
-            customer.mobile = form.cleaned_data["mobile"]
-            customer.email = form.cleaned_data["email"]
-            customer.save(update_fields=("name", "surname", "address", "company", "credit_card_nr", "tax_id", "mobile",
-            "email"))
-
-            ctx = {'form': form, 'customer': customer}
-            return render(self.request, "car_rent/customer_create.html", context=ctx)
-
-        ctx = {'errors': form.errors}
-        return render(self.request, "car_rent/customer_create.html", context=ctx)
+            offer = RentalOffer.objects.get(id=id)
+        except RentalOffer.DoesNotExist:
+            return HttpResponse()
+        # user = request.user
+        user = CustomUser.objects.get(id=request.user.id)
+        car_rental = CarRental.objects.create(customer_id=user,rental_offer_id=offer,is_rented=True)
+        car_rental.save()
+        ctx = {'offer':offer,'user':user}
+        return render(request,"car_rent/car_rental_succusfull.html", context=ctx)
 
 
-class CustomerDelete(View):
-    def get(self, request, customer_id, *args, **kwargs):
-        try:
-            customer = Customer.objects.get(id=customer_id)
-        except Customer.DoesNotExist:
-            ctx = {'customer_id': id, 'errors': True}
-            return render(request, "car_rent/customer_delete.html", context=ctx)
-        customer_id = customer.id
-        customer.delete()
 
 
-class CustomerView(View):
-    def get(self, request, customer_id, *args, **kwargs):
-        try:
-            customer = Customer.objects.get(id=customer_id)
-            ctx = {"customer": customer}
-        except Customer.DoesNotExist:
-            ctx = {'customer_id': id}
-        return render(request, "car_rent/customer_create.html", context=ctx)
 
+
+# class ListOfCustomers(View):
+#     def get(self, request, *args, **kwargs):
+#         list_of_customers = Customer.objects.all()
+#         ctx = {'list_of_customers': list_of_customers}
+#         return render(self.request, 'car_rent/list_of_customers.html', context=ctx)
+#
+#
+# class CustomerAdd(View):
+#     def get(self, request, *args, **kwargs):
+#         form = CustomerCreate()
+#         ctx = {'form': form}
+#         return render(self.request, "car_rent/customer_create.html", context=ctx)
+#
+#     def post(self, request, *args, **kwargs):
+#         form = CustomerCreate(data=request.POST)
+#         if form.is_valid():
+#             customer = form.save(commit=False)
+#             customer.save()
+#             ctx = {'customer': customer, 'form': form}
+#             return render(self.request, "car_rent/customer_create.html", context=ctx)
+#         return render(self.request, "car_rent/customer_create.html", {'form': form})
+#
+#
+# class CustomerEdit(View):
+#     def get(self, request, customer_id, *args, **kwargs):
+#         try:
+#             customer = Customer.objects.get(id=customer_id)
+#         except Customer.DoesNotExist:
+#             ctx = {'customer_id': id, 'errors': True}
+#             return render(self.request, "car_rent/customer_create.html", context=ctx)
+#
+#         form = CustomerCreate(instance=customer)
+#         ctx = {'customer': customer, 'form': form}
+#         return render(self.request, "car_rent/customer_create.html", context=ctx)
+#
+#     def post(self, request, customer_id, *args, **kwargs):
+#         try:
+#             customer = Customer.objects.get(id=customer_id)
+#         except Customer.DoesNotExist:
+#             return HttpResponseBadRequest()
+#         form = CustomerCreate(data=request.POST)
+#         if form.is_valid():
+#             customer.name = form.cleaned_data["name"]
+#             customer.surname = form.cleaned_data["surname"]
+#             customer.address = form.cleaned_data["address"]
+#             customer.company = form.cleaned_data["company"]
+#             customer.credit_card_nr = form.cleaned_data["credit_card_nr"]
+#             customer.tax_id = form.cleaned_data["tax_id"]
+#             customer.mobile = form.cleaned_data["mobile"]
+#             customer.email = form.cleaned_data["email"]
+#             customer.save(update_fields=("name", "surname", "address", "company", "credit_card_nr", "tax_id", "mobile",
+#                                          "email"))
+#
+#             ctx = {'form': form, 'customer': customer}
+#             return render(self.request, "car_rent/customer_create.html", context=ctx)
+#
+#         ctx = {'errors': form.errors}
+#         return render(self.request, "car_rent/customer_create.html", context=ctx)
+#
+#
+# class CustomerDelete(View):
+#     def get(self, request, customer_id, *args, **kwargs):
+#         try:
+#             customer = Customer.objects.get(id=customer_id)
+#         except Customer.DoesNotExist:
+#             ctx = {'customer_id': id, 'errors': True}
+#             return render(request, "car_rent/customer_delete.html", context=ctx)
+#         customer_id = customer.id
+#         customer.delete()
+#
+#
+# class CustomerView(View):
+#     def get(self, request, customer_id, *args, **kwargs):
+#         try:
+#             customer = Customer.objects.get(id=customer_id)
+#             ctx = {"customer": customer}
+#         except Customer.DoesNotExist:
+#             ctx = {'customer_id': id}
+#         return render(request, "car_rent/customer_create.html", context=ctx)
