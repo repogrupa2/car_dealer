@@ -2,14 +2,14 @@ from django.urls import path, include, reverse_lazy
 import accounts.views as views
 from django.contrib.auth import views as auth_views
 
+# app_name = 'accounts'
+
 urlpatterns = [
     path("register", views.register, name="register"),
     path("login_user", views.login_user, name="login_user"),
     path("logout_user", views.logout_user, name="logout_user"),
     path("home", views.home, name="home"),
     path("remind", views.remindPass, name="remind"),
-    # remind password for login user
-    # path('password/', views.change_password, name='change_password'),
     path('reset/', include('django.contrib.auth.urls')),
     path("password_reset/", auth_views.PasswordResetView.as_view(
 
