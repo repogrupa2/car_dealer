@@ -79,9 +79,6 @@ hours = [('00', '00:00'), ('01', '01:00'), ('02', '02:00'), ('03', '03:00'), ('0
 class Branch(models.Model):
     address = models.CharField(max_length=39)
     city = models.CharField(max_length=16)
-    phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)',
-                                 message="Phone number must be entered in the format: '+00 000 000 000'. Up to 11 "
-                                         "digits allowed.")
     mobile = models.CharField(validators=[phone_regex], max_length=17)
     open_from = models.CharField(max_length=6, choices=hours)
     open_till = models.CharField(max_length=6, choices=hours)

@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
-from .models import CustomUser, Vehicle, Branch, Brand, Model, RentalOffer, BranchCarAvailability, CarRental, Customer
+from .models import CustomUser, Vehicle, Branch, Brand, Model, RentalOffer, BranchCarAvailability, CarRental
 from django import forms
 
 
