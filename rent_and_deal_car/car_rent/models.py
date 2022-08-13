@@ -1,13 +1,11 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 # służy do internacjonalizacji I18N
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
+from car_rent.regex import phone_regex, branch_phone_regex
 
-phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)', message="Phone nr must be entered in the format: "
-                                                                          "+00 000 000 000'. Up to 11 digits allowed.")
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
@@ -22,8 +20,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     mobile = models.CharField(validators=[phone_regex], max_length=17)
 
     date_joined = models.DateTimeField(default=timezone.now)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -119,22 +115,6 @@ class RentalOffer(models.Model):
     def __str__(self):
         return f"Vehicle_Id: {self.Vehicle_Id}"
 
-
-# class Customer(models.Model):
-#     name = models.CharField(max_length=30, verbose_name='name')
-#     surname = models.CharField(max_length=30, verbose_name='surname')
-#     address = models.CharField(max_length=39)
-#     company = models.CharField(max_length=50, null=True)
-#     credit_card_nr = models.IntegerField(max_length=24)
-#     tax_id = models.CharField(max_length=10, null=True)
-#     phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)', message="Phone nr must be entered in the format: "
-#                                                                           "+00 000 000 000'. Up to 11 digits allowed.")
-#     mobile = models.CharField(validators=[phone_regex], max_length=17)
-#     email = models.EmailField(max_length=39)
-#
-#     def __str__(self):
-#         return f"name: {self.name}, surname: {self.surname}"
-        
         
 class CarRental(models.Model):
     customer_id = models.ForeignKey(CustomUser,on_delete=models.PROTECT)
