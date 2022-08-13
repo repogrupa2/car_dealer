@@ -1,10 +1,10 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 # służy do internacjonalizacji I18N
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
+from car_rent.regex import phone_regex, branch_phone_regex
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -62,7 +62,6 @@ class Vehicle(models.Model):
         return f"Model: {self.model_id}"
 
 
-
 hours = [('00', '00:00'), ('01', '01:00'), ('02', '02:00'), ('03', '03:00'), ('04', '04:00'), ('05', '05:00'),
          ('06', '06:00'), ('07', '07:00'),
          ('08', '08:00'), ('09', '09:00'), ('10', '10:00'), ('11', '11:00'), ('12', '12:00'), ('13', '13:00'),
@@ -74,18 +73,15 @@ hours = [('00', '00:00'), ('01', '01:00'), ('02', '02:00'), ('03', '03:00'), ('0
 class Branch(models.Model):
     address = models.CharField(max_length=39)
     city = models.CharField(max_length=16)
-    phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)',
-                                 message="Phone number must be entered in the format: '+00 000 000 000'. Up to 11 "
-                                         "digits allowed.")
-    mobile = models.CharField(validators=[phone_regex], max_length=17)
+    phone_regex = models.CharField(branch_phone_regex, max_length=17)
+    mobile = models.CharField(validators=[branch_phone_regex], max_length=17)
     open_from = models.CharField(max_length=6, choices=hours)
     open_till = models.CharField(max_length=6, choices=hours)
     mail = models.EmailField(max_length=39)
     remarks = models.TextField(null=True)
 
     def __str__(self):
-        return f"Address: {self.address} in {self.city}, open from: {self.open_from}, open till: {self.open_till} ,mobile: {self.mobile}, " \
-               f"mail {self.mail}"
+        return f"Address: {self.address} in {self.city}, open from: {self.open_from}, open till: {self.open_till}"
 
 
 class BranchCarAvailability(models.Model):
@@ -97,12 +93,13 @@ class BranchCarAvailability(models.Model):
         return f"Branch: {self.branch_id} , Car: {self.vehicle_id}, Availability: {self.availability}"
 
 
-categories = [('Economy','Economy'),('Intermediate ','Intermediate '),('Premium','Premium'),('Luxury','Luxury')]
+categories = [('Economy', 'Economy'), ('Intermediate ', 'Intermediate '), ('Premium', 'Premium'), ('Luxury', 'Luxury')]
+
 
 class RentalOffer(models.Model):
     Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
     BranchCarAvailability_Id = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
-    Categories = models.CharField(max_length=13,choices=categories)
+    Categories = models.CharField(max_length=13, choices=categories)
     Description = models.TextField(null=True)
     Deposit = models.DecimalField(decimal_places=2, max_digits=10)
     Price_per_day = models.DecimalField(decimal_places=2, max_digits=10)
@@ -114,23 +111,22 @@ class RentalOffer(models.Model):
 class Customer(models.Model):
     name = models.CharField(max_length=30, verbose_name='name')
     surname = models.CharField(max_length=30, verbose_name='surname')
-    address = models.CharField(max_length=39)
+    address = models.CharField(max_length=30)
     company = models.CharField(max_length=50, null=True)
-    credit_card_nr = models.IntegerField(max_length=24)
+    credit_card_nr = models.IntegerField()
     tax_id = models.CharField(max_length=10, null=True)
-    phone_regex = RegexValidator(regex=r'(^[+]\d+(?:[ ]\d+)*)', message="Phone nr must be entered in the format: "
-                                                                          "+00 000 000 000'. Up to 11 digits allowed.")
+    phone = models.CharField(phone_regex, max_length=17)
     mobile = models.CharField(validators=[phone_regex], max_length=17)
     email = models.EmailField(max_length=39)
 
     def __str__(self):
         return f"name: {self.name}, surname: {self.surname}"
-        
-        
+
+
 class CarRental(models.Model):
-    customer_id = models.ForeignKey(Customer,on_delete=models.PROTECT)
-    rental_offer_id = models.ForeignKey(RentalOffer,on_delete=models.PROTECT)
-    total_price = models.DecimalField(decimal_places=2, max_digits=10,null=True)
+    customer_id = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    rental_offer_id = models.ForeignKey(RentalOffer, on_delete=models.PROTECT)
+    total_price = models.DecimalField(decimal_places=2, max_digits=10, null=True)
     date_of_rent = models.DateField(auto_now_add=True)
 
     def __str__(self):

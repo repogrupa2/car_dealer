@@ -30,20 +30,18 @@
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
         <a class="btn btn-primary" href="{% url 'car_rent:home'%}">Home</a>
         <a class="btn btn-primary" href="{% url 'car_rent:list-of-rental-offers'%}">Offer</a>
-        <a class="btn btn-primary" href="{% url 'car_rent:vehicle-list'%}">Vehicle</a>
         <a class="btn btn-primary" href="{% url 'car_rent:list-of-branch'%}">Branches</a>
         <a class="btn btn-primary" href="{% url 'car_rent:aboutus'%}">About us</a>
 
         <div class="btn-group" role="group">
             <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
+            Vehicles
             </button>
             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                <li><a class="dropdown-item" href="{% url 'car_rent:vehicle-list'%}">car_id1</a></li>
-                <li><a class="dropdown-item" href="#">car_id2</a></li>
-                <li><a class="dropdown-item" href="#">car_id3</a></li>
-                <li><a class="dropdown-item" href="#">car_id4</a></li>
-                <li><a class="dropdown-item" href="#">...</a></li>
+                {% for vehicle in vehicles %}
+                    <li class="dropdown-item" href="#">{{vehicle}}</li>
+                {% endfor %}
+
             </ul>
         </div>
     </div>

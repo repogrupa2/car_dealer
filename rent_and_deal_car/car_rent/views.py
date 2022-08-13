@@ -299,7 +299,10 @@ class ModelList(View):
 
 
 def home(request):
-    return render(request, "car_rent/home.html")
+    vehicles = Vehicle.objects.all()
+    ctx = {'vehicles' : vehicles}
+
+    return render(request, "car_rent/home.html", context=ctx)
 
 def aboutus(request):
     return render(request, "car_rent/about_us.html")
