@@ -19,7 +19,8 @@
         <h5>Fuel: {{vehicle.type_of_fuel}}</h5>
         <h5>Transmission: {{vehicle.transmission}}</h5>
         <h5>Vin: {{vehicle.vin}}</h5>
-        <h5>Photo: {% if vehicle.photo != None %}
+        <h5>Photo:
+            {% if vehicle.photo %}
             <img style='max-width: 10%' src="{{ vehicle.photo.url }}">
                     {% endif %}</h5>
     {% csrf_token %}
