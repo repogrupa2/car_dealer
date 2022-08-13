@@ -55,11 +55,10 @@ class RentalOfferCreate(forms.ModelForm):
         fields = ('Vehicle_Id', 'BranchCarAvailability_Id', 'Categories', 'Description',
                   'Deposit', 'Price_per_day')
 
-
-class CustomerForm(forms.ModelForm):
-    class Meta:
-        model = Customer
-        fields = ('name', 'surname')
+# class CustomerForm(forms.ModelForm):
+#     class Meta:
+#         model = Customer
+#         fields = ('name','surname')
 
 
 class CarRentalForm(forms.ModelForm):
@@ -67,9 +66,8 @@ class CarRentalForm(forms.ModelForm):
         model = CarRental
         fields = ('customer_id', 'rental_offer_id', 'total_price')
 
-
-class CustomerCreate(forms.ModelForm):
-    class Meta:
-        model = Customer
-        fields = ('name', 'surname', 'address', 'company', 'credit_card_nr', 'tax_id',
-                  'mobile', 'email')
+# class CustomerCreate(forms.ModelForm):
+#     class Meta:
+#         model = Customer
+#         fields = ('name', 'surname', 'address', 'company', 'credit_card_nr', 'tax_id',
+#                   'mobile', 'email')

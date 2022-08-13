@@ -6,21 +6,22 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser, Branch, Model, RentalOffer, BranchCarAvailability, Brand, Vehicle, CarRental, Customer
 
 
+
+
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ('email', 'is_staff', 'is_active', 'is_renting')
-    list_filter = ('email', 'is_staff', 'is_active', 'is_renting')
+    list_display = ('email', 'is_staff', 'is_active')
+    list_filter = ('email', 'is_staff', 'is_active')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_renting')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': (
-            'email', 'first_name', 'last_name', 'password1', 'password2', 'is_staff', 'is_active', 'is_renting')}
+            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2', 'is_staff', 'is_active')}
          ),
     )
     search_fields = ('email',)
@@ -36,3 +37,6 @@ admin.site.register(Brand)
 admin.site.register(Vehicle)
 admin.site.register(CarRental)
 admin.site.register(Customer)
+
+
+
