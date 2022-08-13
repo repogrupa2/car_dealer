@@ -93,7 +93,8 @@ class ViewBranch(View):
 class ListOfRentalOffers(View):
     def get(self, request, *args, **kwargs):
         list_of_offers = RentalOffer.objects.all()
-        ctx = {'list_of_offers': list_of_offers}
+        vehicles = Vehicle.objects.all()
+        ctx = {'list_of_offers': list_of_offers,'vehicles':vehicles}
         return render(self.request, 'car_rent/list_of_offers.html', context=ctx)
 
 
@@ -163,7 +164,8 @@ class RentalOfferView(View):
     def get(self, request, rental_offer_id, *args, **kwargs):
         try:
             rental_offer = RentalOffer.objects.get(id=rental_offer_id)
-            ctx = {"rental_offer": rental_offer}
+            vehicles = Vehicle.objects.all()
+            ctx = {"rental_offer": rental_offer,'vehicles':vehicles}
         except RentalOffer.DoesNotExist:
             ctx = {'rental_offer_id': id}
         return render(request, "car_rent/offer.html", context=ctx)
