@@ -54,7 +54,9 @@
 
             <ul class="dropdown-menu dropdown-menu-lg-end">
                 <li><a class="dropdown-item" href="{% url 'car_rent:account-details'%}">Account</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
+                {% if user.is_staff %}
+                    <li><a class="dropdown-item" href="{% url 'car_rent:switch-admin'%}">Admin panel</a></li>
+                {% endif %}
                 <li><a class="dropdown-item" href="#">Another action</a></li>
                 <li><a class="dropdown-item" href="#">Another action</a></li>
                 <div class="dropdown-divider"></div>
