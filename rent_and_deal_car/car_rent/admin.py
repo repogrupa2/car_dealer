@@ -27,6 +27,8 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
+# Connect view site in admin to homepage
+admin.site.site_url = "/home"
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Branch)
