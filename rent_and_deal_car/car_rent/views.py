@@ -342,6 +342,10 @@ class CarRentalDetails(View):  # Tu wyświetlanie Car Rental
         return render(request,"car_rent/car_rental_succusfull.html", context=ctx)
 
 
+class AdminPanel(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "admin")
+
 
 
 
