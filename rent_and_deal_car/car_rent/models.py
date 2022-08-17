@@ -67,7 +67,6 @@ class Vehicle(models.Model):
         return f"Model: {self.model_id}"
 
 
-
 hours = [('00', '00:00'), ('01', '01:00'), ('02', '02:00'), ('03', '03:00'), ('04', '04:00'), ('05', '05:00'),
          ('06', '06:00'), ('07', '07:00'),
          ('08', '08:00'), ('09', '09:00'), ('10', '10:00'), ('11', '11:00'), ('12', '12:00'), ('13', '13:00'),
@@ -99,12 +98,13 @@ class BranchCarAvailability(models.Model):
         return f"Branch: {self.branch_id} , Car: {self.vehicle_id}, Availability: {self.availability}"
 
 
-categories = [('Economy','Economy'),('Intermediate ','Intermediate '),('Premium','Premium'),('Luxury','Luxury')]
+categories = [('Economy', 'Economy'), ('Intermediate ', 'Intermediate '), ('Premium', 'Premium'), ('Luxury', 'Luxury')]
+
 
 class RentalOffer(models.Model):
     Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
     BranchCarAvailability_Id = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
-    Categories = models.CharField(max_length=13,choices=categories)
+    Categories = models.CharField(max_length=13, choices=categories)
     Description = models.TextField(null=True)
     Deposit = models.DecimalField(decimal_places=2, max_digits=10)
     Price_per_day = models.DecimalField(decimal_places=2, max_digits=10)
@@ -114,9 +114,9 @@ class RentalOffer(models.Model):
 
 
 class CarRental(models.Model):
-    customer_id = models.ForeignKey(CustomUser,on_delete=models.PROTECT)
-    rental_offer_id = models.ForeignKey(RentalOffer,on_delete=models.PROTECT)
-    total_price = models.DecimalField(decimal_places=2, max_digits=10,null=True)
+    customer_id = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    rental_offer_id = models.ForeignKey(RentalOffer, on_delete=models.PROTECT)
+    total_price = models.DecimalField(decimal_places=2, max_digits=10, null=True)
     date_of_rent = models.DateField(auto_now_add=True)
     is_rented = models.BooleanField(default=False)
 
