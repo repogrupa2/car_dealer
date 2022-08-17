@@ -1,9 +1,6 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.http import HttpResponseBadRequest
-from django.shortcuts import render
-from django.views import View
-from .models import CustomUser, Vehicle, Branch, Brand, Model, RentalOffer, BranchCarAvailability, CarRental
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import CustomUser, Vehicle, Branch, Brand, Model, RentalOffer, BranchCarAvailability, CarRental
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -55,19 +52,8 @@ class RentalOfferCreate(forms.ModelForm):
         fields = ('Vehicle_Id', 'BranchCarAvailability_Id', 'Categories', 'Description',
                   'Deposit', 'Price_per_day')
 
-# class CustomerForm(forms.ModelForm):
-#     class Meta:
-#         model = Customer
-#         fields = ('name','surname')
-
 
 class CarRentalForm(forms.ModelForm):
     class Meta:
         model = CarRental
         fields = ('customer_id', 'rental_offer_id', 'total_price')
-
-# class CustomerCreate(forms.ModelForm):
-#     class Meta:
-#         model = Customer
-#         fields = ('name', 'surname', 'address', 'company', 'credit_card_nr', 'tax_id',
-#                   'mobile', 'email')

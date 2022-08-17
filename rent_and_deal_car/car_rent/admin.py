@@ -1,11 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
-from .apps import CarRentConfig
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser, Branch, Model, RentalOffer, BranchCarAvailability, Brand, Vehicle, CarRental
-
-
 
 
 class CustomUserAdmin(UserAdmin):
@@ -27,6 +23,7 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
+
 # Connect view site in admin to homepage
 admin.site.site_url = "/home"
 
@@ -38,6 +35,3 @@ admin.site.register(Model)
 admin.site.register(Brand)
 admin.site.register(Vehicle)
 admin.site.register(CarRental)
-
-
-
