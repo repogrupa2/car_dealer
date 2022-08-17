@@ -413,3 +413,9 @@ class ReturnCar(LoginRequiredMixin, View):
 
         ctx = {"offer": offer, 'user': user}
         return render(request, "car_rent/car_rental_return_successful.html", context=ctx)
+
+
+class AdminPanel(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "admin")
+
