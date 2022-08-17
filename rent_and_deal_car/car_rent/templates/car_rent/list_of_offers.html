@@ -1,36 +1,40 @@
 {% extends 'car_rent/base.html' %}
 
 {% block content %}
-
 <form action="{% url 'car_rent:list-of-rental-offers' %}" method="post">
 
-   {% for offer in list_of_offers %}
-<br>
+    {% for offer in list_of_offers %}
+        {% csrf_token %}
+        {{ form }}
+        <br>
+        <div class="container ">
+            <div class="col-md-6">
+                <div class="card card-body bg-light mb-3 border-primary mb-3">
 
-     <div class="container">
-        <div class="col-md-6 ">
-            <div class="card card-body bg-light mb-3 border-primary mb-3">
+                    <h5>Model:{{offer.Vehicle_Id.model_id}}</h5>
+                    <p>Branch Car Availability: {{ offer.BranchCarAvailability_Id.branch_id}}</p>
+                    <p>Categories: {{offer.Categories}}</p>
+                    <p>Description:{{offer.Description}}</p>
+                    <p>Deposit: {{ offer.Deposit }}</p>
+                    <p>Price_per_day: {{ offer.Price_per_day }}</p>
 
-    <h5>Model:{{offer.Vehicle_Id.model_id}}</h5>
-    <p>Branch Car Availability: {{ offer.BranchCarAvailability_Id.branch_id}}</p>
-    <p>Categories: {{offer.Categories}}</p>
-    <p>Description:{{offer.Description}}</p>
-    <p>Deposit: {{ offer.Deposit }}</p>
-    <p>Price_per_day: {{ offer.Price_per_day }}</p>
-    {% csrf_token %}
-    {{ form }}
-                <a class="btn btn-outline-primary  btn-sm btn-block" href="{% url 'car_rent:car_rental' offer.id %}">Rent</a>
-
-       </div>
-
-       </div>
-
-       </div>
-
-
-</br>
-   {% endfor %}
-
+                    {% if rented %}
+                        {% if rented == offer.id%}
+                            <a class="btn btn-outline-danger btn-sm btn-block"
+                               href="{% url 'car_rent:car_rental_return' offer.id %}">Return</a>
+                        {% else %}
+                            <a href="#" class="btn btn-outline-success btn-sm btn-block disabled" role="button"
+                               aria-disabled="true">Rent</a>
+                        {% endif %}
+                    {% else %}
+                        <a class="btn btn-outline-success btn-sm btn-block " role="button" aria-disabled="true"
+                               href="{% url 'car_rent:car_rental' offer.id %}">Rent</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <br>
+    {% endfor %}
 </form>
 {% endblock content %}
 
