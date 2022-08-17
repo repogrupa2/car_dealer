@@ -1,0 +1,15 @@
+{% extends 'car_rent/base.html' %}
+
+{% block content %}
+<div class="container">
+	<div class="card text-center text-white bg-success mb-2 border-primary mb-3" style="width: 50rem;">
+
+        <div class="card-header">
+
+        <p>Congratulations {{request.user}} you are finish renting {{offer.Vehicle_Id.model_id}}! </p>
+           <p> We wait when you back</p>
+</div>
+    </div>
+        </div>
+
+{% endblock content %}

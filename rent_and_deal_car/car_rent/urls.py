@@ -5,7 +5,7 @@ from rent_and_deal_car import settings
 from .views import ListOfBranches, ViewBranch, CreateBranch, EditBranch, BranchDelete, VehicleList, AddVehicle, \
     CreateOffer, UpdateVehicle, VehicleDelete, BrandList, \
     CreateBrand, CreateModel, ModelList, ListOfRentalOffers, home, aboutus, CarRental, RentalOfferView, RentalOfferEdit, \
-    RentalOfferDelete, CarRentalDetails, account_details, AdminPanel
+    RentalOfferDelete, CarRentalDetails, account_details, ReturnCar, AdminPanel
 
 app_name = "car_rent"
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('delete/<int:RentalOffer_id>', RentalOfferDelete.as_view, name="delete-offer"),
     path('car_rental/<int:id>',CarRentalDetails.as_view(), name="car_rental"),
     path('car_rental_succesfull/',CarRentalDetails.as_view(), name="car_rental_succesfull"),
+    path('car_rental_return/<int:id>',ReturnCar.as_view(), name="car_rental_return"),
     path('home/', home, name="home"),
     path('aboutus/', aboutus, name="aboutus"),
     path('account_details/', account_details, name="account-details"),
