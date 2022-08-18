@@ -8,8 +8,8 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ('email', 'is_staff', 'is_active')
-    list_filter = ('email', 'is_staff', 'is_active')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active')
+    list_filter = ('is_staff', 'is_active')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
@@ -21,7 +21,7 @@ class CustomUserAdmin(UserAdmin):
          ),
     )
     search_fields = ('email',)
-    ordering = ('email',)
+    ordering = ('id',)
 
 
 # Connect view site in admin to homepage
