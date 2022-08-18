@@ -2,35 +2,61 @@
 {% block content %}
     <div class="container-fluid bg">
         <div class="row">
-            <div class="col-md-4 col-sm--4 col-xs-12"></div>
-            <div class="col-md-4 col-sm--4 col-xs-12">
-                <form action="/accounts/register" method="post"  class="form-container">
+            <div class="col-md-3 col-sm--3 col-xs-12"></div>
+            <div class="col-md-6 col-sm--6 col-xs-12">
+                <form action="/accounts/register" method="post"  class="form-container-register">
                     {% csrf_token%}
                     <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label class="label_text" for="first_name">First Name</label>
                             <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name"
                                 Required>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label class="label_text" for="last_name">Last Name</label>
                             <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name"
                                 Required>
                         </div>
+                        <div class="form-group col-md-4">
+                            <label class="label_text" for="email">Email address</label>
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" Required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="label_text" for="password">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                                Required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="label_text" for="confirm_password">Confirm Password</label>
+                            <input type="password" class="form-control" name="confirm_password" id="confirm_password"
+                                placeholder="Confirm Your Password" Required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="label_text" for="address">Address</label>
+                            <input type="address" class="form-control" name="address" id="address" placeholder="Address" Required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="label_text" for="company">Company</label>
+                            <input type="text" class="form-control" name="company" id="company" placeholder="If you rent for Company" Required>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label class="label_text" for="email">Email address</label>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" Required>
+                        <label class="label_text" for="credit_card_nr">Credit card</label>
+                        <input type="text" class="form-control" name="credit_card_nr" id="credit_card_nr" placeholder="Credit card number" Required>
                     </div>
-                    <div class="form-group">
-                        <label class="label_text" for="password">Password</label>
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Password"
-                            Required>
-			        </div>
-                    <div class="form-group">
-                        <label class="label_text" for="confirm_password">Confirm Password</label>
-                        <input type="password" class="form-control" name="confirm_password" id="confirm_password"
-                            placeholder="Confirm Your Password" Required>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="label_text" for="tax_id">Tax ID</label>
+                            <input type="number" class="form-control" name="tax_id" id="tax_id" placeholder="Tax ID" Required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="label_text" for="mobile">Mobile</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Tax ID" Required>
+                        </div>
                     </div>
                     <div class="d-grid gap-2 ">
                         <button type="submit" class="btn btn-success btn-lg custom_button">SIGNUP</button>

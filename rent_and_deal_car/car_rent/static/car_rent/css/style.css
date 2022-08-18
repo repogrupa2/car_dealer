@@ -22,6 +22,20 @@ body {
     box-shadow: -1px 4px 39px 5px rgba(250,250,250,1);
 }
 
+.form-container-register {
+    border: 1px solid #fff;
+    background-color: rgba(94, 86, 148, 0.47);
+    padding: 50px 20px;
+    margin-top: 13vh;
+    -webkit-box-shadow: -1px 4px 39px 5px rgba(250,250,250,1);
+    -moz-box-shadow: -1px 4px 39px 5px rgba(250,250,250,1);
+    box-shadow: -1px 4px 39px 5px rgba(250,250,250,1);
+}
+
+.razem {
+    float: left;
+}
+
 .label_text {
     margin-top: 2vh;
     margin-bottom: 0.5vh;

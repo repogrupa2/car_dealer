@@ -15,6 +15,11 @@ def register(request):
         last_name = request.POST['last_name']
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
+        address = request.POST['address']
+        company = request.POST['company']
+        credit_card_nr = request.POST['credit_card_nr']
+        tax_id = request.POST['tax_id']
+        mobile = request.POST['mobile']
 
         if password == confirm_password:
             if User.objects.filter(email=email).exists():
@@ -22,7 +27,8 @@ def register(request):
                 return redirect(register)
             else:
                 user = User.objects.create_user(email=email, password=password, first_name=first_name,
-                                                last_name=last_name)
+                                                last_name=last_name, address=address, company=company,
+                                                credit_card_nr=credit_card_nr, tax_id=tax_id, mobile=mobile)
                 user.save()
 
                 return redirect('login_user')
