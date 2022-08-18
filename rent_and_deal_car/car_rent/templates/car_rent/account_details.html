@@ -1,28 +1,43 @@
 {% extends 'car_rent/base.html' %}
 
 {% block content %}
-<br>
-
 <div class="row">
 	<div class="col-md-3">
 		<div class="card card-body">
-			<h5>Customer: {{user.name}}</h5>
+			<h5>Settings</h5>
 			<hr>
+			<div>
+				<a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+					Complete the profile
+				</a>
+			</div>
 		</div>
+
 	</div>
 
 	<div class="col-md-4">
 		<div class="card card-body">
 			<h5>User Details</h5>
 			<hr>
-             <p>Name:  {{request.user.first_name}}</p>
-			<p>Surname:  {{request.user.last_name}}</p>
-			<p>Email:  {{request.user}}</p>
-
+			<p>Name:  {{ user.first_name }} </p>
+			<p>Surname:  {{ user.last_name }} </p>
+			<p>Email:  {{ user.email }} </p>
+			<p>Address:  {{ user.address }} </p>
+			<p>Mobile Number:  {{ user.mobile }} </p>
+			<p>Tax ID:  {{ user.tax_id }} </p>
+			<p>Company:  {{ user.company }} </p>
 
 		</div>
+		<div class="card card-body">
+			{% if user.balance > 0 %}
+				<h1>Balance: <span class="badge bg-success">{{ user.balance }} GR</span></h1>
+			{% elif user.balance == 0 %}
+				<h1>Balance: <span class="badge bg-primary">{{ user.balance }} GR</span></h1>
+			{% else%}
+				<h1>Balance: <span class="badge bg-danger">{{ user.balance }} GR</span></h1>
+			{% endif%}
+		</div>
 	</div>
-
 </div>
 
 

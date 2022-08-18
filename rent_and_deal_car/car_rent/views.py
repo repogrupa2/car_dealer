@@ -21,8 +21,12 @@ def aboutus(request):
     return render(request, "car_rent/about_us.html")
 
 
-def account_details(request):
-    return render(request, "car_rent/account_details.html")
+class AccountDetails(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        user = CustomUser.objects.get(id=request.user.id)
+
+        ctx = {'user': user}
+        return render(request, "car_rent/account_details.html")
 
 
 class AdminPanel(View):

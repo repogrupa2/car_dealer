@@ -3,9 +3,9 @@ from django.urls import path
 
 from rent_and_deal_car import settings
 from .views import ListOfBranches, ViewBranch, VehicleList, \
-     BrandList, \
-     ModelList, ListOfRentalOffers, home, aboutus, RentalOfferView,\
-     CarRentalDetails, account_details, ReturnCar, AdminPanel
+    BrandList, \
+    ModelList, ListOfRentalOffers, home, aboutus, RentalOfferView, \
+    CarRentalDetails, ReturnCar, AdminPanel, AccountDetails
 
 app_name = "car_rent"
 
@@ -23,5 +23,5 @@ urlpatterns = [
     path('car_rental/<int:id>', CarRentalDetails.as_view(), name="car_rental"),
     path('car_rental_succesfull/', CarRentalDetails.as_view(), name="car_rental_succesfull"),
     path('car_rental_return/<int:id>', ReturnCar.as_view(), name="car_rental_return"),
-    path('account_details/', account_details, name="account-details"),
+    path('account_details/', AccountDetails.as_view(), name="account-details"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
