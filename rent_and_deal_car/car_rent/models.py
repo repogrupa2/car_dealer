@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-# służy do internacjonalizacji I18N
+# sluzy do internacjonalizacji I18N
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
 from car_rent.regex import phone_regex, branch_phone_regex
@@ -19,7 +19,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=1)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -85,8 +85,8 @@ class Branch(models.Model):
     remarks = models.TextField(null=True)
 
     def __str__(self):
-        return f"Address: {self.address} in {self.city}, open from: {self.open_from}, open till: {self.open_till} ,mobile: {self.mobile}, " \
-               f"mail {self.mail}"
+        return f"Address: {self.address} in {self.city}, open from: {self.open_from}," \
+               f" open till: {self.open_till} ,mobile: {self.mobile}, ""mail {self.mail}"
 
 
 class BranchCarAvailability(models.Model):
