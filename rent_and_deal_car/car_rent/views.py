@@ -144,12 +144,21 @@ class CarRentalDetails(LoginRequiredMixin, View):
         user = CustomUser.objects.get(id=request.user.id)
         car_rental = CarRental.objects.create(customer_id=user, rental_offer_id=offer, is_rented=True)
         availability.availability = False
+        user.balance -= offer.Deposit
 
+        user.save()
         car_rental.save()
         availability.save()
 
         ctx = {'offer': offer, 'user': user}
         return render(request, "car_rent/car_rental_succusfull.html", context=ctx)
+
+
+def date_counter(date_of_rent):
+    """Date Counter when car is returned"""
+    today = datetime.date.today()
+    time_rent = today - date_of_rent
+    return time_rent.days + 1
 
 
 class ReturnCar(LoginRequiredMixin, View):
@@ -164,9 +173,12 @@ class ReturnCar(LoginRequiredMixin, View):
         except BranchCarAvailability.DoesNotExist:
             return HttpResponse()
 
+        user = CustomUser.objects.get(id=request.user.id)
+        car_rental = CarRental.objects.get(customer_id=user, rental_offer_id=offer, is_rented=True)
         date = datetime.date.today()
+        total_price = date_counter(car_rental.date_of_rent) * offer.Price_per_day
 
-        ctx = {"offer": offer, "date": date}
+        ctx = {"offer": offer, "date": date, 'total_price': total_price}
         return render(request, "car_rent/car_rental_return.html", context=ctx)
 
     def post(self, request, id, *args, **kwargs):
@@ -184,9 +196,12 @@ class ReturnCar(LoginRequiredMixin, View):
         car_rental = CarRental.objects.get(customer_id=user, rental_offer_id=offer, is_rented=True)
         car_rental.is_rented = False
         availability.availability = True
+        total_price = date_counter(car_rental.date_of_rent) * offer.Price_per_day
+        user.balance -= total_price
 
+        user.save()
         car_rental.save()
         availability.save()
 
-        ctx = {"offer": offer, 'user': user}
+        ctx = {"offer": offer, 'user': user, 'total_price': total_price}
         return render(request, "car_rent/car_rental_return_successful.html", context=ctx)

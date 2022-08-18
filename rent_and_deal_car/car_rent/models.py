@@ -19,7 +19,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    balance = models.DecimalField(max_digits=10, decimal_places=1)
+    balance = models.DecimalField(max_digits=10, decimal_places=1, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
