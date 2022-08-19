@@ -22,11 +22,6 @@
 				<a href="#" class="btn btn-primary btn-lg active position-relative"
 				   role="button" aria-pressed="true">
 					Card
-					{% if count %}
-						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-							{{ count }}
-						</span>
-					{% endif %}
 				</a>
 			</div>
 		</div>
@@ -39,11 +34,9 @@
 			<p>Name:  {{ user.first_name }} </p>
 			<p>Surname:  {{ user.last_name }} </p>
 			<p>Email:  {{ user.email }} </p>
-			<p>Address:  {{ user.address }} </p>
+			<p>Address:  {{ user.street }} {{ user.house_number }} {{ user.zip_code}} {{ user.city}}</p>
 			<p>Card:  {{ user.credit_card_nr }} </p>
 			<p>Mobile Number:  {{ user.mobile }} </p>
-			<p>Tax ID:  {{ user.tax_id }} </p>
-			<p>Company:  {{ user.company }} </p>
 
 		</div>
 		<div class="card card-body">
