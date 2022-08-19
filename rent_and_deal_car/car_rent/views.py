@@ -1,11 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 
-from .forms import CustomUserCompleteDetails
+from .forms import CustomUserCompleteDetails, PaymentForm
 from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability, CustomUser
 import datetime
 
@@ -246,3 +246,33 @@ class CompleteDetails(LoginRequiredMixin, View):
             ctx = {"form": form, "user": user}
             return render(request, "car_rent/account_complete_details.html", context=ctx)
         return HttpResponse()
+
+
+class AccountPayment(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        user = CustomUser.objects.get(id=request.user.id)
+        form = PaymentForm()
+        ctx = {'form': form, 'user': user}
+        return render(request, "car_rent/account_payment.html", context=ctx)
+
+    def post(self, request, *args, **kwargs):
+        user = CustomUser.objects.get(id=request.user.id)
+        form = PaymentForm(data=request.POST)
+        if form.is_valid():
+            if int(form.cleaned_data['credit_card_nr']) == user.credit_card_nr:
+                if authenticate(username=user.email, password=form.cleaned_data['password']):
+                    user.balance = user.balance + form.cleaned_data['balance']
+                    user.save()
+                    messages.info(request, f"Excellent !!! The amount {form.cleaned_data['balance']} has been paid")
+                    return render(self.request, "car_rent/account_payment.html",
+                                  context={'form': form, 'good_message': True})
+                else:
+                    messages.info(self.request, 'Password is not correct')
+                    return render(self.request, "car_rent/account_payment.html", context={'form': form})
+
+            else:
+                messages.info(request, 'Credit card is not correct')
+                return render(request, "car_rent/account_payment.html", context={'form': form})
+        else:
+            messages.info(request, 'Oops, some problem try again or come back later')
+            return render(request, "car_rent/account_payment.html", context={'form': form})
