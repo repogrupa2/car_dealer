@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
+
+from .forms import CustomUserCompleteDetails
 from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability, CustomUser
 import datetime
 
@@ -25,8 +27,18 @@ class AccountDetails(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user = CustomUser.objects.get(id=request.user.id)
 
-        ctx = {'user': user}
-        return render(request, "car_rent/account_details.html")
+        account = [user.first_name, user.last_name, user.address, user.mobile,
+                   user.tax_id, user.mobile, user.credit_card_nr]
+        count = 0
+        for i in account:
+            print(i)
+            if len(str(i)) is 0 or i is None:
+                count += 1
+        if count > 0:
+            ctx = {'user': user, 'count': count}
+        else:
+            ctx = {'user': user}
+        return render(self.request, "car_rent/account_details.html", context=ctx)
 
 
 class AdminPanel(View):
@@ -205,3 +217,30 @@ class ReturnCar(LoginRequiredMixin, View):
 
         ctx = {"offer": offer, 'user': user, 'total_price': total_price}
         return render(request, "car_rent/car_rental_return_successful.html", context=ctx)
+
+
+class CompleteDetails(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+
+        form = CustomUserCompleteDetails()
+        ctx = {"form": form}
+        return render(request, "car_rent/account_complete_details.html", context=ctx)
+
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(id=request.user.id)
+        form = CustomUserCompleteDetails(data=request.POST)
+        print(form)
+        if form.is_valid():
+
+            user.address = form.cleaned_data["address"]
+            user.company = form.cleaned_data["company"]
+            user.credit_card_nr = form.cleaned_data["credit_card_nr"]
+            user.tax_id = form.cleaned_data["tax_id"]
+            user.mobile = form.cleaned_data["mobile"]
+
+            user.save(update_fields=["address", "company",
+                                     "credit_card_nr", "tax_id","mobile"])
+
+            ctx = {"form": form, "user": user}
+            return render(request, "car_rent/account_complete_details.html", context=ctx)
+        return HttpResponse()

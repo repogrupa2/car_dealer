@@ -15,6 +15,12 @@ class CustomUserChangeForm(UserChangeForm):
         fields = ('email', 'first_name', 'last_name',)
 
 
+class CustomUserCompleteDetails(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('address','company', 'credit_card_nr', 'tax_id', 'mobile',)
+
+
 class BranchCreate(forms.ModelForm):
     class Meta:
         model = Branch

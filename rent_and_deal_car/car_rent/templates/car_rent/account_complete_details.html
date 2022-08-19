@@ -1,0 +1,77 @@
+{% extends 'car_rent/base.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<h5>Settings</h5>
+			<hr>
+			<div>
+				<a href="#" class="btn btn-primary btn-lg disabled" role="button" aria-pressed="true">
+					Complete details
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card card-body">
+			<h2>Please make complete your details about account</h2>
+                <form action="{% url 'car_rent:account-complete' %}" method="post"  class="">
+                    {% csrf_token%}
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="label_text text-dark" for="Street">Street</label>
+                            <input type="text" class="form-control" name="Street" id="Street"
+								   placeholder="Street" Required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="label_text text-dark" for="house_number">House number</label>
+                            <input type="text" class="form-control" name="house_number" id="house_number"
+								   placeholder="House Number" Required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="label_text text-dark" for="zip_code">Zip Code</label>
+                            <input type="text" class="form-control" name="zip_code" id="zip_code"
+								   placeholder="00-000" Required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="label_text text-dark" for="city">City</label>
+                            <input type="text" class="form-control" name="city" id="city"
+								   placeholder="City" Required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="label_text text-dark" for="mobile">Mobile</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile"
+								   placeholder="+00 123 456 789" Required>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <h2>Payment</h2>
+                    <div class="form-group">
+                        <label class="label_text text-dark" for="credit_card_nr">Credit card</label>
+                        <input type="text" class="form-control" name="credit_card_nr" id="credit_card_nr"
+							   placeholder="Credit card number" Required>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label class="label_text text-dark " for="Expiration">Expiration</label>
+                            <input type="text" class="form-control" name="Expiration" id="Expiration"
+                                   placeholder="Expiration" Required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="label_text text-dark" for="CVV">CVV</label>
+                            <input type="text" class="form-control" name="CVV" id="CVV"
+                                   placeholder="CVV" Required>
+                        </div>
+                        </div>
+                    <div class="d-grid gap-2 ">
+                        <button type="submit" class="btn btn-success btn-lg custom_button">Confirm</button>
+                        <a href="{% url 'car_rent:account-details'%}" class="btn btn-danger btn-lg" role="button" aria-pressed="true">Back</a>
+                    </div>
+                </form>
+		</div>
+	</div>
+</div>
+{% endblock content %}
