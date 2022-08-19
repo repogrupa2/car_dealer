@@ -7,22 +7,40 @@
 			<h5>Settings</h5>
 			<hr>
 			<div>
-				<a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-					Complete the profile
+				<a href="{% url 'car_rent:account-complete'%}" class="btn btn-primary btn-lg active position-relative"
+				   role="button" aria-pressed="true">
+					Complete details
+					{% if count %}
+						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+							{{ count }}
+						</span>
+					{% endif %}
+				</a>
+			</div>
+			<br>
+			<div>
+				<a href="#" class="btn btn-primary btn-lg active position-relative"
+				   role="button" aria-pressed="true">
+					Card
+					{% if count %}
+						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+							{{ count }}
+						</span>
+					{% endif %}
 				</a>
 			</div>
 		</div>
-
 	</div>
 
 	<div class="col-md-4">
 		<div class="card card-body">
-			<h5>User Details</h5>
+			<h5>User Details </h5>
 			<hr>
 			<p>Name:  {{ user.first_name }} </p>
 			<p>Surname:  {{ user.last_name }} </p>
 			<p>Email:  {{ user.email }} </p>
 			<p>Address:  {{ user.address }} </p>
+			<p>Card:  {{ user.credit_card_nr }} </p>
 			<p>Mobile Number:  {{ user.mobile }} </p>
 			<p>Tax ID:  {{ user.tax_id }} </p>
 			<p>Company:  {{ user.company }} </p>
@@ -39,9 +57,4 @@
 		</div>
 	</div>
 </div>
-
-
-
-
-
 {% endblock content %}

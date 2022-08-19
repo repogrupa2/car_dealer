@@ -5,7 +5,7 @@ from rent_and_deal_car import settings
 from .views import ListOfBranches, ViewBranch, VehicleList, \
     BrandList, \
     ModelList, ListOfRentalOffers, home, aboutus, RentalOfferView, \
-    CarRentalDetails, ReturnCar, AdminPanel, AccountDetails
+    CarRentalDetails, ReturnCar, AdminPanel, AccountDetails, CompleteDetails
 
 app_name = "car_rent"
 
@@ -24,4 +24,5 @@ urlpatterns = [
     path('car_rental_succesfull/', CarRentalDetails.as_view(), name="car_rental_succesfull"),
     path('car_rental_return/<int:id>', ReturnCar.as_view(), name="car_rental_return"),
     path('account_details/', AccountDetails.as_view(), name="account-details"),
+    path('account-complete/', CompleteDetails.as_view(), name="account-complete"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
