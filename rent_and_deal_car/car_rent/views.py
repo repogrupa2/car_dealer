@@ -27,11 +27,11 @@ class AccountDetails(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user = CustomUser.objects.get(id=request.user.id)
 
-        account = [user.first_name, user.last_name, user.address, user.mobile,
-                   user.tax_id, user.mobile, user.credit_card_nr]
+        account = [user.first_name, user.last_name, user.street, user.house_number,
+                   user.zip_code, user.city, user.credit_card_nr, user.mobile]
         count = 0
         for i in account:
-            print(i)
+            # print(i)
             if len(str(i)) is 0 or i is None:
                 count += 1
         if count > 0:
@@ -229,17 +229,19 @@ class CompleteDetails(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         user = User.objects.get(id=request.user.id)
         form = CustomUserCompleteDetails(data=request.POST)
-        print(form)
         if form.is_valid():
 
-            user.address = form.cleaned_data["address"]
-            user.company = form.cleaned_data["company"]
+            user.street = form.cleaned_data["street"]
+            user.house_number = form.cleaned_data["house_number"]
+            user.zip_code = form.cleaned_data["zip_code"]
+            user.city = form.cleaned_data["city"]
             user.credit_card_nr = form.cleaned_data["credit_card_nr"]
-            user.tax_id = form.cleaned_data["tax_id"]
+            user.expiration = form.cleaned_data["expiration"]
+            user.CVV = form.cleaned_data["CVV"]
             user.mobile = form.cleaned_data["mobile"]
 
-            user.save(update_fields=["address", "company",
-                                     "credit_card_nr", "tax_id","mobile"])
+            user.save(update_fields=["street", "house_number", "zip_code", "city",
+                                     "credit_card_nr", 'expiration', 'CVV', 'mobile'])
 
             ctx = {"form": form, "user": user}
             return render(request, "car_rent/account_complete_details.html", context=ctx)

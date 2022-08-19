@@ -18,13 +18,16 @@ class CustomUserChangeForm(UserChangeForm):
 class CustomUserCompleteDetails(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('address','company', 'credit_card_nr', 'tax_id', 'mobile',)
+        fields = ('street', 'house_number', 'zip_code',
+                  'city', 'credit_card_nr', 'expiration',
+                  'CVV', 'mobile')
 
 
 class BranchCreate(forms.ModelForm):
     class Meta:
         model = Branch
-        fields = ('address', 'city', 'open_from', 'open_till', 'mail', 'mobile', 'remarks')
+        fields = ('address', 'city', 'open_from', 'open_till',
+                  'mail', 'mobile', 'remarks')
 
 
 class BranchCarAvailabilityCreate(forms.ModelForm):
@@ -36,7 +39,8 @@ class BranchCarAvailabilityCreate(forms.ModelForm):
 class VehicleModelForm(forms.ModelForm):
     class Meta:
         model = Vehicle
-        fields = ('model_id', 'body_type', 'prod_year', 'color', 'engine', 'type_of_fuel',
+        fields = ('model_id', 'body_type', 'prod_year',
+                  'color', 'engine', 'type_of_fuel',
                   'transmission', 'vin', 'photo')
 
 
@@ -55,8 +59,8 @@ class CarModelModelForm(forms.ModelForm):
 class RentalOfferCreate(forms.ModelForm):
     class Meta:
         model = RentalOffer
-        fields = ('Vehicle_Id', 'BranchCarAvailability_Id', 'Categories', 'Description',
-                  'Deposit', 'Price_per_day')
+        fields = ('Vehicle_Id', 'BranchCarAvailability_Id', 'Categories',
+                  'Description', 'Deposit', 'Price_per_day')
 
 
 class CarRentalForm(forms.ModelForm):
