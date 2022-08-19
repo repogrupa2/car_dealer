@@ -23,6 +23,12 @@ class CustomUserCompleteDetails(forms.ModelForm):
                   'CVV', 'mobile')
 
 
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('credit_card_nr', 'balance',  'password',)
+
+
 class BranchCreate(forms.ModelForm):
     class Meta:
         model = Branch

@@ -1,0 +1,85 @@
+{% extends 'car_rent/base.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body">
+			<h5>Settings</h5>
+			<hr>
+			<div>
+				<a href="{% url 'car_rent:account-complete'%}" class="btn btn-primary btn-lg active position-relative"
+				   role="button" aria-pressed="true">
+					Complete details
+					{% if count %}
+						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+							{{ count }}
+						</span>
+					{% endif %}
+				</a>
+			</div>
+			<br>
+			<div>
+				<a href="#" class="btn btn-primary btn-lg disabled"
+				   role="button" aria-pressed="true">
+					Payment
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<div class="card card-body">
+			<h5>Payment</h5>
+			<hr>
+			<form action="{% url 'car_rent:account-payment' %}" method="post">
+				{% csrf_token %}
+				<div class="form-group">
+					<label for="credit_card_nr">Choose your card</label>
+					<select class="form-select" name="credit_card_nr" id="credit_card_nr" aria-label="choose..">
+						<option selected disabled >choose..</option>
+						<option>{{ user.credit_card_nr }}</option>
+					</select>
+				</div>
+				<br>
+
+				<div class="form-group">
+					<label for="balance">Amount to be paid </label>
+					<input type="number" min="20" step="20" class="form-control" name="balance" id="balance" placeholder="Amount" required>
+				</div>
+
+				<br>
+
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+				</div>
+
+				<div class="d-grid gap-2 ">
+					<button type="submit" class="btn btn-success btn-lg custom_button">Confirm</button>
+					<a href="{% url 'car_rent:account-details'%}" class="btn btn-danger btn-lg" role="button" aria-pressed="true">Back</a>
+				</div>
+				<div class="form-group">
+
+					<br>
+					{% if good_message %}
+						{% for message in messages %}
+							<div class="alert alert-success" role="alert">
+								{{ message }}
+							</div>
+						{% endfor %}
+
+					{% else %}
+
+						{% for message in messages %}
+							<div class="alert alert-danger" role="alert">
+								{{message}}
+							</div>
+						{% endfor %}
+
+					{% endif %}
+                </div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock content %}

@@ -11,6 +11,13 @@
 					Complete details
 				</a>
 			</div>
+            <br>
+			<div>
+				<a href="{% url 'car_rent:account-payment' %}" class="btn btn-primary btn-lg active position-relative"
+				   role="button" aria-pressed="true">
+					Payment
+				</a>
+			</div>
 		</div>
 	</div>
 
@@ -18,7 +25,7 @@
 		<div class="card card-body">
 			<h2>Please make complete your details about account</h2>
                 <form action="{% url 'car_rent:account-complete' %}" method="post"  class="">
-                    {% csrf_token%}
+                    {% csrf_token %}
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label class="label_text text-dark" for="street">Street</label>
