@@ -7,7 +7,7 @@
 			<h5>Settings</h5>
 			<hr>
 			<div>
-				<a href="{% url 'car_rent:account-details' %}" class="btn btn-primary btn-lg"
+				<a href="{% url 'car_rent:account-details' %}" class="btn btn-primary btn-lg active"
 				   role="button" aria-pressed="true">
 					Profile
 				</a>
@@ -44,7 +44,9 @@
 					<label for="credit_card_nr">Choose your card</label>
 					<select class="form-select" name="credit_card_nr" id="credit_card_nr" aria-label="choose..">
 						<option selected disabled >choose..</option>
-						<option>{{ user.credit_card_nr }}</option>
+						{% if user.credit_card_nr%}
+							<option>{{ user.credit_card_nr }}</option>
+						{% endif %}
 					</select>
 				</div>
 				<br>
