@@ -10,8 +10,8 @@ from .views import ListOfBranches, ViewBranch, VehicleList, \
 app_name = "car_rent"
 
 urlpatterns = [
-    path('home/', home, name="home"),
-    path('admin/', AdminPanel.as_view(), name="switch-admin"),
+    path("", home, name="home"),
+    path('"admin/', AdminPanel.as_view(), name="switch-admin"),
     path('aboutus/', aboutus, name="aboutus"),
     path('branches/', ListOfBranches.as_view(), name="list-of-branch"),
     path('branch/<int:branch_id>', ViewBranch.as_view(), name="branch"),
