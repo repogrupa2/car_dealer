@@ -146,6 +146,7 @@ class CarRentalDetails(LoginRequiredMixin, View):
         try:
             offer = RentalOffer.objects.get(id=id)
             availability = BranchCarAvailability.objects.get(vehicle_id=offer.Vehicle_Id)
+            user = CustomUser.objects.get(id=request.user.id)
 
         except RentalOffer.DoesNotExist:
             return HttpResponse()
@@ -153,17 +154,24 @@ class CarRentalDetails(LoginRequiredMixin, View):
         except BranchCarAvailability.DoesNotExist:
             return HttpResponse()
 
-        user = CustomUser.objects.get(id=request.user.id)
-        car_rental = CarRental.objects.create(customer_id=user, rental_offer_id=offer, is_rented=True)
-        availability.availability = False
-        user.balance -= offer.Deposit
-
-        user.save()
-        car_rental.save()
-        availability.save()
-
         ctx = {'offer': offer, 'user': user}
-        return render(request, "car_rent/car_rental_succusfull.html", context=ctx)
+
+        if user.balance - offer.Deposit >= 0:
+            user.balance -= offer.Deposit
+            car_rental = CarRental.objects.create(customer_id=user, rental_offer_id=offer, is_rented=True)
+            availability.availability = False
+            user.save()
+            car_rental.save()
+            availability.save()
+
+
+            return render(request, "car_rent/car_rental_succusfull.html", context=ctx)
+
+        else:
+            messages.info(self.request, "You haven't enough cash to pay deposit for car, on your account. ")
+            return render(self.request, "car_rent/car_rental.html", context=ctx)
+
+
 
 
 def date_counter(date_of_rent):
@@ -209,6 +217,7 @@ class ReturnCar(LoginRequiredMixin, View):
         car_rental.is_rented = False
         availability.availability = True
         total_price = date_counter(car_rental.date_of_rent) * offer.Price_per_day
+        user.balance += offer.Deposit
         user.balance -= total_price
 
         user.save()
