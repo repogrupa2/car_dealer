@@ -1,3 +1,5 @@
+from enum import unique
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -20,9 +22,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     CVV = models.CharField(max_length=4, null=True)
     mobile = models.CharField(validators=[phone_regex], max_length=17)
     date_joined = models.DateTimeField(default=timezone.now)
+    balance = models.DecimalField(max_digits=10, decimal_places=1, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    balance = models.DecimalField(max_digits=10, decimal_places=1, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -63,7 +65,7 @@ class Vehicle(models.Model):
     engine = models.DecimalField(decimal_places=1, max_digits=2)
     type_of_fuel = models.CharField(max_length=16, choices=fuel)
     transmission = models.CharField(max_length=16, choices=gearbox)
-    vin = models.CharField(max_length=17)
+    vin = models.CharField(max_length=17, unique=True)
     photo = models.ImageField(blank=True, null=True)
 
     def __str__(self):
@@ -89,7 +91,7 @@ class Branch(models.Model):
 
     def __str__(self):
         return f"Address: {self.address} in {self.city}, open from: {self.open_from}," \
-               f" open till: {self.open_till} ,mobile: {self.mobile}, ""mail {self.mail}"
+               f" open till: {self.open_till} ,mobile: {self.mobile}, mail: {self.mail}"
 
 
 class BranchCarAvailability(models.Model):

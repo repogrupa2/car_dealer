@@ -153,22 +153,28 @@ class CarRentalDetails(LoginRequiredMixin, View):
 
         except BranchCarAvailability.DoesNotExist:
             return HttpResponse()
+        date = datetime.date.today()
+        ctx = {'offer': offer, "date": date, 'user': user}
 
-        ctx = {'offer': offer, 'user': user}
+        user_details = [user.street, user.house_number, user.zip_code, user.city,
+                        user.credit_card_nr, user.expiration, user.CVV, user.mobile]
 
-        if user.balance - offer.Deposit >= 0:
-            user.balance -= offer.Deposit
-            car_rental = CarRental.objects.create(customer_id=user, rental_offer_id=offer, is_rented=True)
-            availability.availability = False
-            user.save()
-            car_rental.save()
-            availability.save()
+        if None not in user_details:
+            if user.balance - offer.Deposit >= 0:
+                user.balance -= offer.Deposit
+                car_rental = CarRental.objects.create(customer_id=user, rental_offer_id=offer, is_rented=True)
+                availability.availability = False
+                user.save()
+                car_rental.save()
+                availability.save()
 
+                return render(request, "car_rent/car_rental_succusfull.html", context=ctx)
 
-            return render(request, "car_rent/car_rental_succusfull.html", context=ctx)
-
+            else:
+                messages.info(self.request, "You haven't enough cash to pay deposit for car, on your account. ")
+                return render(self.request, "car_rent/car_rental.html", context=ctx)
         else:
-            messages.info(self.request, "You haven't enough cash to pay deposit for car, on your account. ")
+            messages.info(self.request, "Before renting, please enter your address and payment method")
             return render(self.request, "car_rent/car_rental.html", context=ctx)
 
 
@@ -214,9 +220,11 @@ class ReturnCar(LoginRequiredMixin, View):
 
         user = CustomUser.objects.get(id=request.user.id)
         car_rental = CarRental.objects.get(customer_id=user, rental_offer_id=offer, is_rented=True)
-        car_rental.is_rented = False
-        availability.availability = True
         total_price = date_counter(car_rental.date_of_rent) * offer.Price_per_day
+        car_rental.is_rented = False
+        car_rental.total_price = total_price
+        availability.availability = True
+
         user.balance += offer.Deposit
         user.balance -= total_price
 
@@ -230,7 +238,6 @@ class ReturnCar(LoginRequiredMixin, View):
 
 class CompleteDetails(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-
         form = CustomUserCompleteDetails()
         ctx = {"form": form}
         return render(request, "car_rent/account_complete_details.html", context=ctx)
@@ -239,7 +246,6 @@ class CompleteDetails(LoginRequiredMixin, View):
         user = User.objects.get(id=request.user.id)
         form = CustomUserCompleteDetails(data=request.POST)
         if form.is_valid():
-
             user.street = form.cleaned_data["street"]
             user.house_number = form.cleaned_data["house_number"]
             user.zip_code = form.cleaned_data["zip_code"]

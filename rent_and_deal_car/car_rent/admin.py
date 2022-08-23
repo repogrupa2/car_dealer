@@ -25,7 +25,7 @@ class CustomUserAdmin(UserAdmin):
 
 
 # Connect view site in admin to homepage
-admin.site.site_url = "/home"
+admin.site.site_url = "/"
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Branch)
