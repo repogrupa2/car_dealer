@@ -1,12 +1,10 @@
-from enum import unique
-
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-# sluzy do internacjonalizacji I18N
+# It is used for internationalization I18N
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
-from car_rent.regex import phone_regex, branch_phone_regex
+from car_rent.regex import phone_regex
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -21,8 +19,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     expiration = models.CharField(max_length=8, null=True)
     CVV = models.CharField(max_length=4, null=True)
     mobile = models.CharField(validators=[phone_regex], max_length=17)
-    date_joined = models.DateTimeField(default=timezone.now)
     balance = models.DecimalField(max_digits=10, decimal_places=1, null=True)
+    date_joined = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -72,20 +70,20 @@ class Vehicle(models.Model):
         return f"Model: {self.model_id}"
 
 
-hours = [('00', '00:00'), ('01', '01:00'), ('02', '02:00'), ('03', '03:00'), ('04', '04:00'), ('05', '05:00'),
-         ('06', '06:00'), ('07', '07:00'),
-         ('08', '08:00'), ('09', '09:00'), ('10', '10:00'), ('11', '11:00'), ('12', '12:00'), ('13', '13:00'),
-         ('14', '14:00'), ('15', '15:00'),
-         ('16', '16:00'), ('17', '17:00'), ('18', '18:00'), ('19', '19:00'), ('20', '20:00'), ('21', '21:00'),
-         ('22', '22:00'), ('23', '23:00')]
+open_hours = [('05', '05:00'), ('06', '06:00'), ('07', '07:00'), ('08', '08:00'),
+              ('09', '09:00'), ('10', '10:00'), ('11', '11:00'), ('12', '12:00')]
+
+close_hours = [('13', '13:00'), ('14', '14:00'), ('15', '15:00'), ('16', '16:00'),
+               ('17', '17:00'), ('18', '18:00'), ('19', '19:00'), ('20', '20:00'),
+               ('21', '21:00'), ('22', '22:00'), ('23', '23:00')]
 
 
 class Branch(models.Model):
     address = models.CharField(max_length=39)
     city = models.CharField(max_length=16)
     mobile = models.CharField(validators=[phone_regex], max_length=17)
-    open_from = models.CharField(max_length=6, choices=hours)
-    open_till = models.CharField(max_length=6, choices=hours)
+    open_from = models.CharField(max_length=6, choices=open_hours)
+    open_till = models.CharField(max_length=6, choices=close_hours)
     mail = models.EmailField(max_length=39)
     remarks = models.TextField(null=True)
 
@@ -94,21 +92,11 @@ class Branch(models.Model):
                f" open till: {self.open_till} ,mobile: {self.mobile}, mail: {self.mail}"
 
 
-class BranchCarAvailability(models.Model):
-    branch_id = models.ForeignKey(Branch, on_delete=models.PROTECT)
-    vehicle_id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
-    availability = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f"Branch: {self.branch_id} , Car: {self.vehicle_id}, Availability: {self.availability}"
-
-
 categories = [('Economy', 'Economy'), ('Intermediate ', 'Intermediate '), ('Premium', 'Premium'), ('Luxury', 'Luxury')]
 
 
 class RentalOffer(models.Model):
     Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
-    BranchCarAvailability_Id = models.ForeignKey(BranchCarAvailability, on_delete=models.PROTECT)
     Categories = models.CharField(max_length=13, choices=categories)
     Description = models.TextField(null=True)
     Deposit = models.DecimalField(decimal_places=2, max_digits=10)

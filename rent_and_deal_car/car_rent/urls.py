@@ -2,10 +2,9 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from rent_and_deal_car import settings
-from .views import ListOfBranches, ViewBranch, VehicleList, \
-    BrandList, \
-    ModelList, ListOfRentalOffers, home, aboutus, RentalOfferView, \
-    CarRentalDetails, ReturnCar, AdminPanel, AccountDetails, CompleteDetails, AccountPayment
+from .views import ListOfBranches, ViewBranch, VehicleList, BrandList, ModelList,\
+    ListOfRentalOffers, home, aboutus, RentalOfferView, CarRentalDetails, ReturnCar,\
+    AdminPanel, AccountDetails, CompleteDetails, AccountPayment
 
 app_name = "car_rent"
 
