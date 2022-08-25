@@ -2,8 +2,8 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from rent_and_deal_car import settings
-from .views import ListOfBranches, ViewBranch, VehicleList, BrandList, ModelList,\
-    ListOfRentalOffers, home, aboutus, RentalOfferView, CarRentalDetails, ReturnCar,\
+from .views import ListOfBranches, ModelList,\
+    ListOfRentalOffers, home, RentalOfferView, CarRentalDetails, ReturnCar,\
     AdminPanel, AccountDetails, CompleteDetails, AccountPayment
 
 app_name = "car_rent"
@@ -11,11 +11,7 @@ app_name = "car_rent"
 urlpatterns = [
     path("", home, name="home"),
     path('admin/', AdminPanel.as_view(), name="switch-admin"),
-    path('aboutus/', aboutus, name="aboutus"),
     path('branches/', ListOfBranches.as_view(), name="list-of-branch"),
-    path('branch/<int:branch_id>', ViewBranch.as_view(), name="branch"),
-    path('vehiclelist/', VehicleList.as_view(), name="vehicle-list"),
-    path('listbrand/', BrandList.as_view(), name="list-brand"),
     path('listmodel/', ModelList.as_view(), name="list-model"),
     path('list_of_offers/', ListOfRentalOffers.as_view(), name="list-of-rental-offers"),
     path('offer/<int:RentalOffer_id>', RentalOfferView.as_view, name="rental-offer"),

@@ -25,25 +25,11 @@
 <body>
 
 <nav id="navbar-example2" class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">Golden Robert Car Dealer</a>
+    <a class="navbar-brand" href="{% url 'car_rent:home'%}">Golden Robert Car Dealer</a>
 
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
         <a class="btn btn-primary" href="{% url 'car_rent:home'%}">Home</a>
         <a class="btn btn-primary" href="{% url 'car_rent:list-of-rental-offers'%}">Offer</a>
-        <a class="btn btn-primary" href="{% url 'car_rent:list-of-branch'%}">Branches</a>
-        <a class="btn btn-primary" href="{% url 'car_rent:aboutus'%}">About us</a>
-
-        <div class="btn-group" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Vehicles
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                {% for vehicle in vehicles %}
-                    <li class="dropdown-item" href="#">{{vehicle}}</li>
-                {% endfor %}
-
-            </ul>
-        </div>
     </div>
 
     <ul class="nav nav-pills">
@@ -57,8 +43,6 @@
                 {% if user.is_staff %}
                     <li><a class="dropdown-item" href="{% url 'car_rent:switch-admin'%}">Admin panel</a></li>
                 {% endif %}
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{% url 'logout_user'%}">LOGOUT</a></li>
             </ul>
