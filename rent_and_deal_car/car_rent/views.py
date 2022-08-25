@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views import View
 
 from .forms import CustomUserCompleteDetails, PaymentForm
-from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, BranchCarAvailability, CustomUser
+from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, CustomUser
 import datetime
 
 User = get_user_model()
@@ -31,7 +31,6 @@ class AccountDetails(LoginRequiredMixin, View):
                    user.zip_code, user.city, user.credit_card_nr, user.mobile]
         count = 0
         for i in account:
-            # print(i)
             if len(str(i)) is 0 or i is None:
                 count += 1
         if count > 0:
@@ -69,13 +68,25 @@ class ListOfRentalOffers(View):
         vehicles = Vehicle.objects.all()
         user = CustomUser.objects.get(id=request.user.id)
         car_rentals = CarRental.objects.filter(customer_id=user.id)
+        car_rental_availability = CarRental.objects.filter(is_rented=True)
+        branch = Branch.objects.all()
+        list = []
+
+        for a in car_rental_availability:
+            list.append(a.rental_offer_id.id)
+
+        if list:
+            print("List")
+        else:
+            print("No list")
+        ctx = {'list_of_offers': list_of_offers, 'branch': branch,
+               'vehicles': vehicles, 'car_rental_availability': list}
 
         for customer_record in car_rentals:
             if customer_record.is_rented:
-                ctx = {'list_of_offers': list_of_offers, 'rented': customer_record.rental_offer_id.id}
+                ctx['rented'] = customer_record.rental_offer_id.id
                 return render(request, "car_rent/list_of_offers.html", context=ctx)
 
-        ctx = {'list_of_offers': list_of_offers, 'vehicles': vehicles}
         return render(self.request, 'car_rent/list_of_offers.html', context=ctx)
 
 
@@ -117,13 +128,9 @@ class CarRentalDetails(LoginRequiredMixin, View):
     def get(self, request, id, *args, **kwargs):
         try:
             offer = RentalOffer.objects.get(id=id)
-            car_availability = BranchCarAvailability.objects.get(vehicle_id=offer.Vehicle_Id)
 
         except RentalOffer.DoesNotExist:
-            return HttpResponse()
-
-        except BranchCarAvailability.DoesNotExist:
-            return HttpResponse()
+            return HttpResponse("This offer does not exist")
 
         date = datetime.date.today()
         '''Take loged user'''
@@ -145,30 +152,32 @@ class CarRentalDetails(LoginRequiredMixin, View):
     def post(self, request, id, *args, **kwargs):
         try:
             offer = RentalOffer.objects.get(id=id)
-            availability = BranchCarAvailability.objects.get(vehicle_id=offer.Vehicle_Id)
             user = CustomUser.objects.get(id=request.user.id)
 
         except RentalOffer.DoesNotExist:
-            return HttpResponse()
+            return HttpResponse("This offer does not exist")
 
-        except BranchCarAvailability.DoesNotExist:
-            return HttpResponse()
         date = datetime.date.today()
         ctx = {'offer': offer, "date": date, 'user': user}
 
         user_details = [user.street, user.house_number, user.zip_code, user.city,
                         user.credit_card_nr, user.expiration, user.CVV, user.mobile]
 
+        car_rentals = CarRental.objects.filter(rental_offer_id=offer.id, is_rented=True)
+
+
         if None not in user_details:
             if user.balance - offer.Deposit >= 0:
-                user.balance -= offer.Deposit
-                car_rental = CarRental.objects.create(customer_id=user, rental_offer_id=offer, is_rented=True)
-                availability.availability = False
-                user.save()
-                car_rental.save()
-                availability.save()
+                if car_rentals:
+                    messages.info(self.request, "Someone already rented this car")
+                    return render(self.request, "car_rent/car_rental.html", context=ctx)
+                else:
+                    user.balance -= offer.Deposit
+                    car_rental = CarRental.objects.create(customer_id=user, rental_offer_id=offer, is_rented=True)
+                    user.save()
+                    car_rental.save()
 
-                return render(request, "car_rent/car_rental_succusfull.html", context=ctx)
+                    return render(request, "car_rent/car_rental_succusfull.html", context=ctx)
 
             else:
                 messages.info(self.request, "You haven't enough cash to pay deposit for car, on your account. ")
@@ -176,8 +185,6 @@ class CarRentalDetails(LoginRequiredMixin, View):
         else:
             messages.info(self.request, "Before renting, please enter your address and payment method")
             return render(self.request, "car_rent/car_rental.html", context=ctx)
-
-
 
 
 def date_counter(date_of_rent):
@@ -191,13 +198,9 @@ class ReturnCar(LoginRequiredMixin, View):
     def get(self, request, id, *args, **kwargs):
         try:
             offer = RentalOffer.objects.get(id=id)
-            car_availability = BranchCarAvailability.objects.get(vehicle_id=offer.Vehicle_Id)
 
         except RentalOffer.DoesNotExist:
-            return HttpResponse()
-
-        except BranchCarAvailability.DoesNotExist:
-            return HttpResponse()
+            return HttpResponse("This offer does not exist")
 
         user = CustomUser.objects.get(id=request.user.id)
         car_rental = CarRental.objects.get(customer_id=user, rental_offer_id=offer, is_rented=True)
@@ -210,27 +213,22 @@ class ReturnCar(LoginRequiredMixin, View):
     def post(self, request, id, *args, **kwargs):
         try:
             offer = RentalOffer.objects.get(id=id)
-            availability = BranchCarAvailability.objects.get(vehicle_id=offer.Vehicle_Id)
 
         except RentalOffer.DoesNotExist:
             return HttpResponse()
 
-        except BranchCarAvailability.DoesNotExist:
-            return HttpResponse()
 
         user = CustomUser.objects.get(id=request.user.id)
         car_rental = CarRental.objects.get(customer_id=user, rental_offer_id=offer, is_rented=True)
         total_price = date_counter(car_rental.date_of_rent) * offer.Price_per_day
         car_rental.is_rented = False
         car_rental.total_price = total_price
-        availability.availability = True
 
         user.balance += offer.Deposit
         user.balance -= total_price
 
         user.save()
         car_rental.save()
-        availability.save()
 
         ctx = {"offer": offer, 'user': user, 'total_price': total_price}
         return render(request, "car_rent/car_rental_return_successful.html", context=ctx)
@@ -260,7 +258,7 @@ class CompleteDetails(LoginRequiredMixin, View):
 
             ctx = {"form": form, "user": user}
             return render(request, "car_rent/account_complete_details.html", context=ctx)
-        return HttpResponse()
+        return HttpResponse("Form is not valid")
 
 
 class AccountPayment(LoginRequiredMixin, View):
@@ -274,7 +272,7 @@ class AccountPayment(LoginRequiredMixin, View):
         user = CustomUser.objects.get(id=request.user.id)
         form = PaymentForm(data=request.POST)
         if form.is_valid():
-            if int(form.cleaned_data['credit_card_nr']) == user.credit_card_nr:
+            if form.cleaned_data['credit_card_nr'] == user.credit_card_nr:
                 if authenticate(username=user.email, password=form.cleaned_data['password']):
                     user.balance = user.balance + form.cleaned_data['balance']
                     user.save()
