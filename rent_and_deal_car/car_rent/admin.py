@@ -11,7 +11,6 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'balance', 'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_active')
     fieldsets = (
-        (None, {'fields': ('email', 'balance', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
     )
     add_fieldsets = (
@@ -38,15 +37,20 @@ class CarRentalAdmin(admin.ModelAdmin):
 
 
 class RentalOfferAdmin(admin.ModelAdmin):
-    # form = RentalOffer
+
     model = RentalOffer
     list_display = ('Vehicle_Id', 'Categories', 'Deposit', 'Price_per_day')
+    raw_id_fields = ("Vehicle_Id",)
 
-    # fieldsets = (
-    #     (None, {'fields': ('Vehicle_Id', 'BranchCarAvailability_Id',
-    #                        'Categories', 'Deposit', 'Price_per_day',)}),
-    #     'Permissions'
-    # )
+
+class VehicleAdmin(admin.ModelAdmin):
+    model = Vehicle
+    list_display = ('model_id', 'vin', 'prod_year',
+                    'body_type', 'engine', 'type_of_fuel',
+                    'transmission', 'color', 'photo')
+    list_filter = ('model_id',)
+
+    search_fields = ('vin',)
 
 
 # Connect view site in admin to homepage
@@ -57,5 +61,5 @@ admin.site.register(Branch)
 admin.site.register(RentalOffer, RentalOfferAdmin)
 admin.site.register(Model)
 admin.site.register(Brand)
-admin.site.register(Vehicle)
+admin.site.register(Vehicle, VehicleAdmin)
 admin.site.register(CarRental, CarRentalAdmin)

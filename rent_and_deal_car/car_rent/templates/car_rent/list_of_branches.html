@@ -29,16 +29,16 @@
             <div class="card card-body bg-light mb-3 border-primary mb-3">
 			<h5>Branch Id: {{branch.id}}</h5>
              <p>Address: {{ branch.address }}</p>
-        <p>City: {{branch.city}}</p>
-        <p>Mobile:{{branch.phone_regex.mobile}}</p>
-        <p>Hours of open from {{ branch.open_from}} till {{ branch.open_till}}</p>
-        <p>Mail: {{ branch.mail }}</p>
-        <p>Remarks: {{ branch.remarks }}</p>
-			<hr>
+            <p>City: {{branch.city}}</p>
+            <p>Mobile:{{branch.phone_regex.mobile}}</p>
+            <p>Hours of open from {{ branch.open_from}} till {{ branch.open_till}}</p>
+            <p>Mail: {{ branch.mail }}</p>
+            <p>Remarks: {{ branch.remarks }}</p>
+                <hr>
             <a class="btn btn-outline-primary  btn-sm btn-block" href="{% url 'car_rent:branch' branch.id %}">View Branch</a>
+            </div>
         </div>
-             </div>
-                    </div>
+    </div>
 
 </br>
    {% endfor %}

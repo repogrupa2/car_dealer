@@ -1,12 +1,13 @@
 from enum import unique
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils import timezone
 # It is used for internationalization I18N
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
-from car_rent.regex import phone_regex
+from car_rent.regex import phone_regex, text_regex
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -18,8 +19,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     zip_code = models.CharField(max_length=8, null=True)
     city = models.CharField(max_length=16, null=True)
     credit_card_nr = models.CharField(max_length=39, null=True)
-    expiration = models.CharField(max_length=8, null=True)
-    CVV = models.CharField(max_length=4, null=True)
+    expiration = models.CharField(max_length=5, null=True)
+    CVV = models.CharField(max_length=3, null=True)
     mobile = models.CharField(validators=[phone_regex], max_length=17)
     balance = models.DecimalField(max_digits=10, decimal_places=1, null=True, default=0.0)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -36,7 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=16)
+    name = models.CharField(max_length=16, validators=[text_regex])
 
     def __str__(self):
         return self.name
@@ -44,7 +45,7 @@ class Brand(models.Model):
 
 class Model(models.Model):
     brand_id = models.ForeignKey(Brand, on_delete=models.PROTECT)
-    name = models.CharField(max_length=16)
+    name = models.CharField(max_length=16, validators=[text_regex])
 
     def __str__(self):
         return f" {self.brand_id} {self.name}"
@@ -56,20 +57,23 @@ fuel = [('Diesel', 'Diesel'), ('Gasoline', 'Gasoline'), ('Electric', 'Electric')
 
 body = [('Sedan', 'Sedan'), ('Combi', 'Combi'), ('SUV', 'SUV'), ('Sport', 'Sport')]
 
+engine = [('1.3', '1.3'), ('1.9', '1.9'), ('2.4', '2.4'),
+          ('3.0', '3.0'), ('4.4', '4.4'), ('5.4', '5.4')]
+
 
 class Vehicle(models.Model):
     model_id = models.ForeignKey(Model, on_delete=models.PROTECT)
     body_type = models.CharField(max_length=16, choices=body)
-    prod_year = models.CharField(max_length=4)
+    prod_year = models.SmallIntegerField(max_length=4, validators=[MinValueValidator(1950), MaxValueValidator(2022)])
     color = models.CharField(max_length=16)
-    engine = models.DecimalField(decimal_places=1, max_digits=2)
+    engine = models.CharField(max_length=3, choices=engine)
     type_of_fuel = models.CharField(max_length=16, choices=fuel)
     transmission = models.CharField(max_length=16, choices=gearbox)
     vin = models.CharField(max_length=17, unique=True)
     photo = models.ImageField(blank=True, null=True)
 
     def __str__(self):
-        return f"Model: {self.model_id}"
+        return f"{self.model_id} VIN- {self.vin}"
 
 
 open_hours = [('05', '05:00'), ('06', '06:00'), ('07', '07:00'), ('08', '08:00'),
@@ -82,7 +86,7 @@ close_hours = [('13', '13:00'), ('14', '14:00'), ('15', '15:00'), ('16', '16:00'
 
 class Branch(models.Model):
     address = models.CharField(max_length=39)
-    city = models.CharField(max_length=16)
+    city = models.CharField(max_length=16, validators=[text_regex])
     mobile = models.CharField(validators=[phone_regex], max_length=17)
     open_from = models.CharField(max_length=6, choices=open_hours)
     open_till = models.CharField(max_length=6, choices=close_hours)
@@ -98,11 +102,13 @@ categories = [('Economy', 'Economy'), ('Intermediate ', 'Intermediate '), ('Prem
 
 
 class RentalOffer(models.Model):
-    Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT, unique=True)
-    Categories = models.CharField(max_length=13, choices=categories)
+    Vehicle_Id = models.OneToOneField(Vehicle, on_delete=models.PROTECT)
+    Categories = models.CharField(max_length=13, choices=categories, validators=[text_regex])
     Description = models.TextField(null=True)
-    Deposit = models.DecimalField(decimal_places=2, max_digits=10)
-    Price_per_day = models.DecimalField(decimal_places=2, max_digits=10)
+    Deposit = models.DecimalField(decimal_places=2, max_digits=8,
+                                  validators=[MinValueValidator(0), MaxValueValidator(999999.99)])
+    Price_per_day = models.DecimalField(decimal_places=2, max_digits=10,
+                                  validators=[MinValueValidator(0), MaxValueValidator(999999.99)])
 
     def __str__(self):
         return f"Vehicle_Id: {self.Vehicle_Id}"
