@@ -243,6 +243,7 @@ class CompleteDetails(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         user = User.objects.get(id=request.user.id)
         form = CustomUserCompleteDetails(data=request.POST)
+        ctx = {"form": form, "user": user}
         if form.is_valid():
             user.street = form.cleaned_data["street"]
             user.house_number = form.cleaned_data["house_number"]
@@ -256,9 +257,11 @@ class CompleteDetails(LoginRequiredMixin, View):
             user.save(update_fields=["street", "house_number", "zip_code", "city",
                                      "credit_card_nr", 'expiration', 'CVV', 'mobile'])
 
-            ctx = {"form": form, "user": user}
+            ctx['good_message'] = True
+            messages.info(self.request, "You finished complete your details")
             return render(request, "car_rent/account_complete_details.html", context=ctx)
-        return HttpResponse("Form is not valid")
+        messages.info(self.request, "Phone must be +00 123 345 678")
+        return render(request, "car_rent/account_complete_details.html", context=ctx)
 
 
 class AccountPayment(LoginRequiredMixin, View):

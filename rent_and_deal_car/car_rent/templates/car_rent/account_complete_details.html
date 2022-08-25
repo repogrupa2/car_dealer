@@ -66,23 +66,36 @@
                     <div class="form-group">
                         <label class="label_text text-dark" for="credit_card_nr">Credit card</label>
                         <input type="text" class="form-control" name="credit_card_nr" id="credit_card_nr"
-							   placeholder="Credit card number" Required>
+							   placeholder="Credit card number" minlength="16"  maxlength="16" Required>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label class="label_text text-dark " for="expiration">Expiration</label>
                             <input type="text" class="form-control" name="expiration" id="expiration"
-                                   placeholder="Expiration" Required>
+                                   placeholder="11/24" maxlength="5" Required>
                         </div>
                         <div class="form-group col-md-3">
                             <label class="label_text text-dark" for="CVV">CVV</label>
                             <input type="text" class="form-control" name="CVV" id="CVV"
-                                   placeholder="CVV" Required>
+                                   placeholder="CVV" maxlength="3" Required>
                         </div>
                         </div>
                     <div class="d-grid gap-2 ">
                         <button type="submit" class="btn btn-success btn-lg custom_button">Confirm</button>
                         <a href="{% url 'car_rent:account-details'%}" class="btn btn-danger btn-lg" role="button" aria-pressed="true">Back</a>
+                    </div>
+                    <div class="form-group">
+                        {% for message in messages %}
+                            {% if good_message %}
+                                <div class="alert alert-success" role="alert">
+                                    {{message}}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{message}}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </form>
 		</div>

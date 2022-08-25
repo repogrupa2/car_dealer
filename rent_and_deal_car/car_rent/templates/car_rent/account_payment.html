@@ -14,14 +14,9 @@
 			</div>
 			<br>
 			<div>
-				<a href="{% url 'car_rent:account-complete'%}" class="btn btn-primary btn-lg active position-relative"
+				<a href="{% url 'car_rent:account-complete'%}" class="btn btn-primary btn-lg active"
 				   role="button" aria-pressed="true">
 					Complete details
-					{% if count %}
-						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-							{{ count }}
-						</span>
-					{% endif %}
 				</a>
 			</div>
 			<br>

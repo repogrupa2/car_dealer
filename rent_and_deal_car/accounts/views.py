@@ -62,8 +62,5 @@ def logout_user(request):
     return redirect('home')
 
 
-def remindPass(request):
-    return render(request, 'password/remind_password.html')
-
 
 
