@@ -25,4 +25,4 @@ urlpatterns = [
     path('account_details/', AccountDetails.as_view(), name="account-details"),
     path('account-complete/', CompleteDetails.as_view(), name="account-complete"),
     path('account-payment/', AccountPayment.as_view(), name="account-payment"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

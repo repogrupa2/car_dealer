@@ -41,7 +41,7 @@ class VehicleModelForm(forms.ModelForm):
         model = Vehicle
         fields = ('model_id', 'body_type', 'prod_year',
                   'color', 'engine', 'type_of_fuel',
-                  'transmission', 'vin', 'photo')
+                  'transmission', 'vin')
 
 
 class BrandModelForm(forms.ModelForm):
