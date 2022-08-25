@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views import View
 
 from .forms import CustomUserCompleteDetails, PaymentForm
-from .models import Branch, Vehicle, Brand, Model, RentalOffer, CarRental, CustomUser
+from .models import Branch, Vehicle, Model, RentalOffer, CarRental, CustomUser
 import datetime
 
 User = get_user_model()
@@ -17,10 +17,6 @@ def home(request):
     ctx = {'vehicles': vehicles}
 
     return render(request, "car_rent/home.html", context=ctx)
-
-
-def aboutus(request):
-    return render(request, "car_rent/about_us.html")
 
 
 class AccountDetails(LoginRequiredMixin, View):
@@ -50,16 +46,6 @@ class ListOfBranches(View):
         list_of_branches = Branch.objects.all()
         ctx = {'list_of_branches': list_of_branches}
         return render(self.request, 'car_rent/list_of_branches.html', context=ctx)
-
-
-class ViewBranch(View):
-    def get(self, request, branch_id, *args, **kwargs):
-        try:
-            branch = Branch.objects.get(id=branch_id)
-            ctx = {"branch": branch}
-        except Branch.DoesNotExist:
-            ctx = {'branch_id': id}
-        return render(request, "car_rent/branch.html", context=ctx)
 
 
 class ListOfRentalOffers(View):
@@ -99,21 +85,6 @@ class RentalOfferView(View):
         except RentalOffer.DoesNotExist:
             ctx = {'rental_offer_id': id}
         return render(request, "car_rent/offer.html", context=ctx)
-
-
-class VehicleList(View):
-    def get(self, request, *args, **kwargs):
-        vehicles = Vehicle.objects.all()
-        ctx = {'vehicles': vehicles}
-        return render(self.request, "car_rent/vehiclelist.html", context=ctx)
-
-
-class BrandList(View):
-    def get(self, request, *args, **kwargs):
-        brand = Brand.objects.all()
-        ctx = {'brand': brand}
-
-        return render(self.request, "car_rent/brand_list.html", context=ctx)
 
 
 class ModelList(View):
