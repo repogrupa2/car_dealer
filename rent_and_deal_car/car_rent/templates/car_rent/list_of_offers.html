@@ -11,25 +11,35 @@
             <div class="col-md-6">
                 <div class="card card-body bg-light mb-3 border-primary mb-3">
 
-                    <h5>Model:{{offer.Vehicle_Id.model_id}}</h5>
-                    <p>Branch Car Availability: {{ offer.BranchCarAvailability_Id.branch_id }}</p>
+                    <h5>Model:{{offer.Vehicle_Id.model_id}} {{ offer.id }}</h5>
                     <p>Categories: {{offer.Categories}}</p>
                     <p>Description:{{offer.Description}}</p>
                     <p>Deposit: {{ offer.Deposit }}</p>
                     <p>Price_per_day: {{ offer.Price_per_day }}</p>
+                    <p>photo: {{ offer.Vehicle_Id.photo }}</p>
 
-                    {% if rented %}
-                        {% if rented == offer.id%}
-                            <a class="btn btn-outline-danger btn-sm btn-block"
-                               href="{% url 'car_rent:car_rental_return' offer.id %}">Return</a>
-                        {% else %}
-                            <a href="#" class="btn btn-outline-success btn-sm btn-block disabled" role="button"
-                               aria-disabled="true">Rent</a>
+
+                    {% if rented == offer.id%}
+                        <a class="btn btn-outline-danger btn-sm btn-block"
+                           href="{% url 'car_rent:car_rental_return' offer.id %}">Return</a>
+                    {% elif car_rental_availability %}
+                        {% if offer.id in car_rental_availability %}
+                            <a class="btn btn-secondary btn-sm btn-block disabled"
+                                   href="#">Someone rented this car</a>
+                        {% else%}
+                            {% if rented %}
+                                <a class="btn btn-outline-success btn-sm btn-block disabled" aria-disabled="true"
+                                   href="#"> Rent </a>
+                            {% else %}
+                                <a class="btn btn-outline-success btn-sm btn-block " role="button" aria-disabled="true"
+                                   href="{% url 'car_rent:car_rental' offer.id %}">Rent</a>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <a class="btn btn-outline-success btn-sm btn-block " role="button" aria-disabled="true"
-                               href="{% url 'car_rent:car_rental' offer.id %}">Rent</a>
+                           href="{% url 'car_rent:car_rental' offer.id %}">Rent</a>
                     {% endif %}
+
                 </div>
             </div>
         </div>

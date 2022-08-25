@@ -27,12 +27,6 @@
                 {% if messages%}
                     <a href="{% url 'car_rent:list-of-rental-offers' %}" class="btn btn-danger"
                        role="button" aria-pressed="true">Back</a>
-
-                    <br>
-
-                    <a href="{% url 'car_rent:account-payment' %}" class="btn btn-secondary"
-                       role="button" aria-pressed="true">Go to payment</a>
-
                 {% else %}
                     <input type="submit" value="Confirm" class="btn btn-success">
 

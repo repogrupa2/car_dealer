@@ -1,3 +1,5 @@
+from enum import unique
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -19,7 +21,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     expiration = models.CharField(max_length=8, null=True)
     CVV = models.CharField(max_length=4, null=True)
     mobile = models.CharField(validators=[phone_regex], max_length=17)
-    balance = models.DecimalField(max_digits=10, decimal_places=1, null=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=1, null=True, default=0.0)
     date_joined = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -96,7 +98,7 @@ categories = [('Economy', 'Economy'), ('Intermediate ', 'Intermediate '), ('Prem
 
 
 class RentalOffer(models.Model):
-    Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT)
+    Vehicle_Id = models.ForeignKey(Vehicle, on_delete=models.PROTECT, unique=True)
     Categories = models.CharField(max_length=13, choices=categories)
     Description = models.TextField(null=True)
     Deposit = models.DecimalField(decimal_places=2, max_digits=10)
