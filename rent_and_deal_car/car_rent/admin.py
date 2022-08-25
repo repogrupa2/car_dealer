@@ -47,7 +47,7 @@ class VehicleAdmin(admin.ModelAdmin):
     model = Vehicle
     list_display = ('model_id', 'vin', 'prod_year',
                     'body_type', 'engine', 'type_of_fuel',
-                    'transmission', 'color', 'photo')
+                    'transmission', 'color')
     list_filter = ('model_id',)
 
     search_fields = ('vin',)

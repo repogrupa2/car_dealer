@@ -1,5 +1,3 @@
-from enum import unique
-
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -70,7 +68,6 @@ class Vehicle(models.Model):
     type_of_fuel = models.CharField(max_length=16, choices=fuel)
     transmission = models.CharField(max_length=16, choices=gearbox)
     vin = models.CharField(max_length=17, unique=True)
-    photo = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.model_id} VIN- {self.vin}"
